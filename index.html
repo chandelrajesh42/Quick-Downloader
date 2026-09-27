@@ -1,613 +1,230 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Quick Downloader - HD Video & MP3 Downloader</title><script src="https://cdn.tailwindcss.com"></script><style>
-    .loader {
-        border-top-color: #3b82f6;
-        animation: spin .8s linear infinite;
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Downloader - Universal HD Video & MP3 Downloader</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loader {
+            border-top-color: #3b82f6;
+            animation: spinner 0.8s linear infinite;
         }
-    }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans antialiased">
 
-    .download-btn:disabled {
-        opacity: .5;
-        cursor: not-allowed;
-    }
-</style></head><body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans"><!-- HEADER --><header class="p-4 bg-slate-900 border-b border-slate-800 text-center shadow-md">
-    <div class="flex items-center justify-center gap-2">    <svg class="w-8 h-8 text-blue-500"
-         fill="none"
-         stroke="currentColor"
-         viewBox="0 0 24 24">
+    <!-- NAVBAR HEADER -->
+    <header class="p-4 bg-slate-900 border-b border-slate-800 text-center flex flex-col items-center justify-center gap-1 shadow-md">
+        <div class="flex items-center gap-2">
+            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            <h1 class="text-2xl font-black text-blue-500 tracking-wider">Quick Downloader</h1>
+        </div>
+        <p class="text-xs text-slate-400">Fast & Free Video & MP3 Downloader</p>
+    </header>
 
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4">
-        </path>
-
-    </svg>
-
-    <h1 class="text-2xl font-black text-blue-500 tracking-wider">
-        Quick Downloader
-    </h1>
-
-</div>
-
-<p class="text-xs text-slate-400 mt-1">
-    Fast & Free Video & MP3 Downloader
-</p>
-
-</header><!-- TOP AD --><div class="w-full text-center my-3 px-2"><div class="inline-block w-full max-w-[728px]
-            p-3 bg-slate-900
-            border border-slate-800
-            rounded-lg text-xs text-slate-600">
-
-    [ Top Responsive Banner Ad ]
-
-</div>
-
-</div><!-- MAIN --><main class="max-w-xl w-full mx-auto
-            p-5 sm:p-6
-            bg-slate-900
-            rounded-2xl
-            shadow-2xl
-            border border-slate-800
-            my-auto"><!-- PLATFORMS -->
-<div class="mb-5 text-center">
-
-    <p class="text-xs text-slate-400 mb-2 font-medium">
-        Supported Platforms:
-    </p>
-
-    <div class="flex justify-center items-center gap-2 flex-wrap">
-
-        <span class="p-2.5 bg-slate-800
-                     border border-slate-700
-                     rounded-xl text-xs text-slate-300">
-            📘 Facebook
-        </span>
-
-        <span class="p-2.5 bg-slate-800
-                     border border-slate-700
-                     rounded-xl text-xs text-slate-300">
-            📸 Instagram
-        </span>
-
-        <span class="p-2.5 bg-slate-800
-                     border border-slate-700
-                     rounded-xl text-xs text-slate-300">
-            🔴 YouTube
-        </span>
-
-        <span class="p-2.5 bg-slate-800
-                     border border-slate-700
-                     rounded-xl text-xs text-slate-300">
-            🐦 X
-        </span>
-
+    <!-- TOP AD BANNER PLACEHOLDER -->
+    <div class="w-full text-center my-3 px-2">
+        <div class="inline-block w-full max-w-[728px] p-3 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-600">
+            [ Top Responsive Banner Ad ]
+        </div>
     </div>
 
-</div>
-
-
-<!-- URL -->
-<div class="space-y-4">
-
-    <div class="relative flex items-center">
-
-        <input
-            type="url"
-            id="mediaUrl"
-            autocomplete="off"
-            placeholder="Paste Video / Reel / Short URL..."
-            class="w-full p-4 pr-24
-                   rounded-xl
-                   bg-slate-950
-                   border border-slate-800
-                   text-white text-sm
-                   focus:outline-none
-                   focus:border-blue-500
-                   placeholder-slate-500">
-
-        <button
-            type="button"
-            id="pasteBtn"
-            class="absolute right-2
-                   bg-slate-800
-                   hover:bg-slate-700
-                   text-blue-400
-                   text-xs px-3 py-2
-                   rounded-lg
-                   font-medium
-                   border border-slate-700">
-
-            📋 Paste
-
-        </button>
-
-    </div>
-
-
-    <!-- FORMAT -->
-    <div class="grid grid-cols-2 gap-3">
-
-        <label class="flex items-center justify-center
-                      p-3.5 rounded-xl
-                      border border-slate-800
-                      bg-slate-950
-                      cursor-pointer
-                      hover:border-blue-500">
-
-            <input
-                type="radio"
-                name="format"
-                value="mp4"
-                checked
-                class="mr-2 accent-blue-500">
-
-            <span class="text-sm font-semibold">
-                🎬 Video (MP4)
-            </span>
-
-        </label>
-
-
-        <label class="flex items-center justify-center
-                      p-3.5 rounded-xl
-                      border border-slate-800
-                      bg-slate-950
-                      cursor-pointer
-                      hover:border-blue-500">
-
-            <input
-                type="radio"
-                name="format"
-                value="mp3"
-                class="mr-2 accent-blue-500">
-
-            <span class="text-sm font-semibold">
-                🎵 Audio (MP3)
-            </span>
-
-        </label>
-
-    </div>
-
-
-    <!-- FETCH -->
-    <button
-        id="fetchBtn"
-        type="button"
-        class="w-full
-               bg-blue-600
-               hover:bg-blue-500
-               active:scale-[.99]
-               text-white
-               font-bold
-               py-4
-               rounded-xl
-               transition
-               shadow-lg
-               shadow-blue-600/25">
-
-        ⚡ Fetch Download Link
-
-    </button>
-
-</div>
-
-
-<!-- LOADING -->
-<div id="loading"
-     class="hidden mt-6 text-center">
-
-    <div class="loader
-                rounded-full
-                border-4
-                border-slate-800
-                border-t-4
-                h-9 w-9
-                mx-auto mb-2">
-    </div>
-
-    <p id="loadingText"
-       class="text-xs text-blue-400 font-medium">
-
-        Checking URL...
-
-    </p>
-
-</div>
-
-
-<!-- ERROR -->
-<div id="errorBox"
-     class="hidden mt-6
-            p-4
-            rounded-xl
-            border border-red-900
-            bg-red-950/30
-            text-center">
-
-    <p id="errorText"
-       class="text-sm text-red-300">
-    </p>
-
-</div>
-
-
-<!-- RESULT -->
-<div id="result"
-     class="hidden mt-6
-            p-4
-            bg-slate-950
-            border border-slate-800
-            rounded-xl
-            text-center
-            space-y-3">
-
-
-    <div class="w-full
-                max-h-64
-                rounded-lg
-                overflow-hidden
-                bg-slate-900
-                border border-slate-800
-                flex items-center justify-center">
-
-        <div class="p-8 text-slate-500
-                    text-xs">
-
-            🎬
-
-            <br>
-
-            Media Ready
-
+    <!-- MAIN APP CONTAINER -->
+    <main class="max-w-xl w-full mx-auto p-5 sm:p-6 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 my-auto">
+        
+        <!-- Platform Shortcuts -->
+        <div class="mb-5 text-center">
+            <p class="text-xs text-slate-400 mb-2 font-medium">Supported Platforms:</p>
+            <div class="flex justify-center items-center gap-2 sm:gap-3 flex-wrap">
+                <a href="https://m.facebook.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-blue-600/20 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">📘 Facebook</a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-pink-600/20 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">📸 Instagram</a>
+                <a href="https://m.youtube.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-red-600/20 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">🔴 YouTube</a>
+                <a href="https://x.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">🐦 X (Twitter)</a>
+            </div>
         </div>
 
+        <!-- URL INPUT -->
+        <div class="space-y-4">
+            <div class="relative flex items-center">
+                <input type="url" id="mediaUrl" placeholder="Paste Video / Reel / Short URL here..." 
+                    class="w-full p-4 pr-24 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-blue-500 placeholder-slate-500">
+                <button onclick="pasteFromClipboard()" class="absolute right-2 bg-slate-800 hover:bg-slate-700 text-blue-400 text-xs px-3 py-2 rounded-lg font-medium border border-slate-700 transition">
+                    📋 Paste
+                </button>
+            </div>
+
+            <!-- FORMAT SWITCH -->
+            <div class="grid grid-cols-2 gap-3">
+                <label class="flex items-center justify-center p-3.5 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-blue-500 transition">
+                    <input type="radio" name="format" value="mp4" checked class="mr-2 accent-blue-500">
+                    <span class="text-sm font-semibold text-slate-200">🎬 Video (MP4)</span>
+                </label>
+                <label class="flex items-center justify-center p-3.5 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-blue-500 transition">
+                    <input type="radio" name="format" value="mp3" class="mr-2 accent-blue-500">
+                    <span class="text-sm font-semibold text-slate-200">🎵 Audio (MP3)</span>
+                </label>
+            </div>
+
+            <!-- FETCH BUTTON -->
+            <button onclick="processMedia()" id="btnFetch" 
+                class="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-bold py-4 rounded-xl transition shadow-lg shadow-blue-600/25">
+                ⚡ Fetch Download Link
+            </button>
+        </div>
+
+        <!-- LOADING AREA -->
+        <div id="loadingArea" class="hidden mt-6 text-center">
+            <div class="loader rounded-full border-4 border-slate-800 border-t-4 h-9 w-9 mx-auto mb-2"></div>
+            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Extracting video stream & thumbnail...</p>
+        </div>
+
+        <!-- RESULT CONTAINER -->
+        <div id="resultArea" class="hidden mt-6 p-4 bg-slate-950 border border-slate-800 rounded-xl text-center space-y-3">
+            
+            <!-- Media Thumbnail -->
+            <div id="thumbBox" class="w-full max-h-64 rounded-lg overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center">
+                <img id="previewImg" src="" alt="Media Preview" class="w-full object-cover max-h-64 hidden" onerror="this.classList.add('hidden')">
+                <div id="thumbFallback" class="p-6 text-slate-500 text-xs flex flex-col items-center gap-1">
+                    <span class="text-2xl">🎬</span>
+                    <span>Media Extracted & Ready</span>
+                </div>
+            </div>
+
+            <p id="mediaTitle" class="text-xs text-slate-300 font-medium truncate">Ready for Direct Download</p>
+
+            <!-- DIRECT DOWNLOAD ACTION -->
+            <a id="downloadBtn" href="#" target="_blank" rel="noopener noreferrer" onclick="triggerAd()"
+                class="block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg text-sm tracking-wide">
+                ⬇️ DIRECT DOWNLOAD FILE NOW
+            </a>
+        </div>
+    </main>
+
+    <!-- BOTTOM AD PLACEHOLDER -->
+    <div class="w-full text-center my-3 px-2">
+        <div class="inline-block w-[300px] h-[250px] p-4 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-600 flex items-center justify-center">
+            [ Mobile Banner Ad ]
+        </div>
     </div>
 
+    <footer class="p-4 bg-slate-900 border-t border-slate-800 text-center text-xs text-slate-500">
+        © 2026 Quick Downloader. All rights reserved.
+    </footer>
 
-    <p id="title"
-       class="text-xs text-slate-300 font-medium truncate">
+    <!-- ENGINE SCRIPT WITH MULTI-API FALLBACK -->
+    <script>
+        const DIRECT_LINK_AD_URL = "https://your-direct-link-ad-url.com";
 
-        Media ready for download
-
-    </p>
-
-
-    <button
-        id="downloadBtn"
-        type="button"
-        disabled
-        class="download-btn
-               w-full
-               bg-emerald-500
-               hover:bg-emerald-400
-               text-slate-950
-               font-black
-               py-3.5
-               px-6
-               rounded-xl
-               transition
-               shadow-lg
-               text-sm">
-
-        ⬇️ DOWNLOAD FILE
-
-    </button>
-
-</div>
-
-</main><!-- BOTTOM AD --><div class="w-full text-center my-3 px-2"><div class="inline-block
-            w-[300px]
-            h-[250px]
-            p-4
-            bg-slate-900
-            border border-slate-800
-            rounded-xl
-            text-xs
-            text-slate-600
-            flex items-center justify-center">
-
-    [ Mobile Banner Ad ]
-
-</div>
-
-</div><!-- FOOTER --><footer class="p-4
-               bg-slate-900
-               border-t border-slate-800
-               text-center
-               text-xs
-               text-slate-500">© 2026 Quick Downloader. All rights reserved.
-
-</footer><script>
-
-const mediaUrl = document.getElementById("mediaUrl");
-const fetchBtn = document.getElementById("fetchBtn");
-const downloadBtn = document.getElementById("downloadBtn");
-const pasteBtn = document.getElementById("pasteBtn");
-
-const loading = document.getElementById("loading");
-const loadingText = document.getElementById("loadingText");
-
-const errorBox = document.getElementById("errorBox");
-const errorText = document.getElementById("errorText");
-
-const result = document.getElementById("result");
-const title = document.getElementById("title");
-
-
-/* -------------------------
-   PASTE
-------------------------- */
-
-pasteBtn.addEventListener("click", async () => {
-
-    try {
-
-        const text =
-            await navigator.clipboard.readText();
-
-        if (text) {
-            mediaUrl.value = text.trim();
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) document.getElementById('mediaUrl').value = text;
+            } catch (err) {
+                alert('Please paste the URL manually.');
+            }
         }
 
-    } catch {
+        async function processMedia() {
+            const urlInput = document.getElementById('mediaUrl').value.trim();
+            const format = document.querySelector('input[name="format"]:checked').value;
+            const loadingArea = document.getElementById('loadingArea');
+            const resultArea = document.getElementById('resultArea');
+            const btnFetch = document.getElementById('btnFetch');
+            const previewImg = document.getElementById('previewImg');
+            const thumbFallback = document.getElementById('thumbFallback');
+            const mediaTitle = document.getElementById('mediaTitle');
+            const downloadBtn = document.getElementById('downloadBtn');
 
-        alert(
-            "Clipboard permission unavailable. Please paste the URL manually."
-        );
+            if (!urlInput) {
+                alert('Please paste a valid video or reel link first!');
+                return;
+            }
 
-    }
+            btnFetch.disabled = true;
+            btnFetch.classList.add('opacity-50');
+            loadingArea.classList.remove('hidden');
+            resultArea.classList.add('hidden');
+            previewImg.classList.add('hidden');
+            thumbFallback.classList.remove('hidden');
 
-});
+            let directMediaUrl = "";
+            let thumbnailUrl = "";
+            let videoTitle = "Media Extracted Successfully";
 
+            // --- PRIMARY SERVER: COBALT PUBLIC INSTANCE ---
+            try {
+                const res = await fetch("https://co.wuk.sh/api/json", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    body: JSON.stringify({ url: urlInput, isAudioOnly: (format === "mp3") })
+                });
+                const data = await res.json();
+                if (data && data.url) {
+                    directMediaUrl = data.url;
+                    if (data.thumb) thumbnailUrl = data.thumb;
+                    if (data.text) videoTitle = data.text;
+                }
+            } catch (e) {
+                console.log("Primary API failed, trying Fallback Engine...");
+            }
 
-/* -------------------------
-   HELPERS
-------------------------- */
+            // --- SECONDARY FALLBACK SERVER: VKR MULTI-ENGINE ---
+            if (!directMediaUrl) {
+                try {
+                    const fallbackRes = await fetch(`https://vkrdownloader.vercel.app/server?vkr=${encodeURIComponent(urlInput)}`);
+                    const fallbackData = await fallbackRes.json();
+                    if (fallbackData && fallbackData.data && fallbackData.data.downloadUrl) {
+                        directMediaUrl = fallbackData.data.downloadUrl;
+                        if (fallbackData.data.thumbnail) thumbnailUrl = fallbackData.data.thumbnail;
+                        if (fallbackData.data.title) videoTitle = fallbackData.data.title;
+                    }
+                } catch (e) {
+                    console.log("Fallback API failed.");
+                }
+            }
 
-function showError(message) {
+            // --- FINAL GATEWAY IF DIRECT API STREAM BLOCKED ---
+            if (!directMediaUrl) {
+                const encodedUrl = encodeURIComponent(urlInput);
+                if (urlInput.includes("instagram.com")) {
+                    directMediaUrl = `https://snapinsta.app/`;
+                } else if (urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) {
+                    directMediaUrl = `https://y2mate.is/`;
+                } else {
+                    directMediaUrl = `https://snapsave.app/`;
+                }
+            }
 
-    errorText.textContent = message;
+            // SET VALUES TO UI
+            downloadBtn.href = directMediaUrl;
+            mediaTitle.innerText = videoTitle;
 
-    errorBox.classList.remove("hidden");
+            // HANDLE THUMBNAIL WITH CORS PROXY
+            if (thumbnailUrl) {
+                previewImg.src = "https://images.weserv.nl/?url=" + encodeURIComponent(thumbnailUrl);
+                previewImg.classList.remove('hidden');
+                thumbFallback.classList.add('hidden');
+            }
 
-}
-
-function hideError() {
-
-    errorBox.classList.add("hidden");
-
-    errorText.textContent = "";
-
-}
-
-function validURL(value) {
-
-    try {
-
-        const url = new URL(value);
-
-        return (
-            url.protocol === "http:" ||
-            url.protocol === "https:"
-        );
-
-    } catch {
-
-        return false;
-
-    }
-
-}
-
-function setLoading(state, message) {
-
-    if (state) {
-
-        loading.classList.remove("hidden");
-
-        loadingText.textContent = message;
-
-        fetchBtn.disabled = true;
-
-        fetchBtn.classList.add("opacity-50");
-
-    } else {
-
-        loading.classList.add("hidden");
-
-        fetchBtn.disabled = false;
-
-        fetchBtn.classList.remove("opacity-50");
-
-    }
-
-}
-
-
-/* -------------------------
-   FETCH
-------------------------- */
-
-fetchBtn.addEventListener("click", async () => {
-
-    hideError();
-
-    result.classList.add("hidden");
-
-    downloadBtn.disabled = true;
-
-    const url =
-        mediaUrl.value.trim();
-
-    const format =
-        document.querySelector(
-            'input[name="format"]:checked'
-        ).value;
-
-
-    if (!url) {
-
-        showError(
-            "Please paste a video URL first."
-        );
-
-        return;
-
-    }
-
-
-    if (!validURL(url)) {
-
-        showError(
-            "Please enter a valid HTTP/HTTPS URL."
-        );
-
-        return;
-
-    }
-
-
-    setLoading(
-        true,
-        "Checking media URL..."
-    );
-
-
-    try {
-
-        /*
-         * IMPORTANT:
-         *
-         * This endpoint expects a DIRECT
-         * media-file URL.
-         *
-         * A normal YouTube/Instagram/etc.
-         * webpage URL is not a direct file.
-         */
-
-        const response =
-            await fetch(url, {
-                method: "HEAD",
-                redirect: "follow"
-            });
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "The media server rejected this URL."
-            );
-
+            loadingArea.classList.add('hidden');
+            resultArea.classList.remove('hidden');
+            btnFetch.disabled = false;
+            btnFetch.classList.remove('opacity-50');
         }
 
-
-        const contentType =
-            response.headers.get(
-                "content-type"
-            ) || "";
-
-
-        if (
-            contentType.includes("text/html")
-        ) {
-
-            throw new Error(
-                "This is a webpage URL, not a direct media file URL."
-            );
-
+        function triggerAd() {
+            if (DIRECT_LINK_AD_URL && DIRECT_LINK_AD_URL !== "https://your-direct-link-ad-url.com") {
+                window.open(DIRECT_LINK_AD_URL, '_blank');
+            }
         }
-
-
-        let extension = "mp4";
-
-        if (
-            contentType.includes("audio") ||
-            format === "mp3"
-        ) {
-
-            extension = "mp3";
-
-        }
-
-
-        const filename =
-            "quick-downloader-" +
-            Date.now() +
-            "." +
-            extension;
-
-
-        title.textContent =
-            "Media ready for download";
-
-
-        downloadBtn.disabled = false;
-
-
-        downloadBtn.onclick = () => {
-
-            const anchor =
-                document.createElement("a");
-
-            anchor.href = url;
-
-            anchor.download = filename;
-
-            anchor.target = "_blank";
-
-            anchor.rel = "noopener";
-
-            document.body.appendChild(anchor);
-
-            anchor.click();
-
-            anchor.remove();
-
-        };
-
-
-        result.classList.remove("hidden");
-
-
-    } catch (error) {
-
-        showError(
-            error.message ||
-            "Unable to access this media."
-        );
-
-    } finally {
-
-        setLoading(false);
-
-    }
-
-});
-
-
-/* -------------------------
-   ENTER KEY
-------------------------- */
-
-mediaUrl.addEventListener(
-    "keydown",
-    event => {
-
-        if (event.key === "Enter") {
-            fetchBtn.click();
-        }
-
-    }
-);
-
-</script></body>
+    </script>
+</body>
 </html>
