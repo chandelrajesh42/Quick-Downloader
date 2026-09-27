@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Quick Downloader - Fast HD Video & MP3 Downloader</title>
     <!-- ✅ Tailwind CSS Correct CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://tailwindcss.com"></script>
     <style>
         .loader {
             border-top-color: #3b82f6;
@@ -102,7 +102,13 @@
         <!-- DOWNLOAD BUTTON RESULT -->
         <div id="resultArea" class="hidden mt-6 p-4 bg-slate-950 border border-emerald-500/30 rounded-xl text-center">
             <p class="text-emerald-400 text-sm font-semibold mb-2">✓ File Extracted Successfully!</p>
-            <p id="videoTitle" class="text-xs text-slate-400 mb-3 truncate px-2"></p>
+            
+            <!-- यहाँ फ़ाइल की डिटेल्स दिखाई देगी -->
+            <div class="bg-slate-900 border border-slate-800 p-3 rounded-lg mb-3 flex items-center justify-center gap-2">
+                <span id="fileIcon" class="text-lg">🎬</span>
+                <p id="videoTitle" class="text-xs text-slate-200 font-medium truncate max-w-[80%]">Loading Title...</p>
+            </div>
+
             <button id="downloadBtn" onclick="triggerAdAndDownload()" 
                 class="inline-block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg shadow-emerald-500/20 text-sm tracking-wide cursor-pointer animate-bounce">
                 ⬇️ DOWNLOAD NOW
@@ -122,9 +128,9 @@
         © 2026 Quick Downloader. All rights reserved.
     </footer>
 
-    <!-- ✅ FIXED & COMPLETED JAVASCRIPT LOGIC ENGINE -->
+    <!-- JAVASCRIPT LOGIC ENGINE -->
     <script>
-        // अपनी Monetag / Adsterra डायरेक्ट लिंक (Ad Url) यहाँ डालें
+        // विज्ञापन के लिए अपनी Monetag / Adsterra डायरेक्ट लिंक (Ad Url) यहाँ डालें
         const DIRECT_LINK_AD_URL = "https://your-direct-link-ad-url.com"; 
         let realDownloadUrl = ""; 
 
@@ -133,7 +139,7 @@
             window.open(url, '_blank');
         }
 
-        // ऑटो-पेस्ट बटन फिक्स
+        // ऑटो-पेस्ट बटन लॉजिक
         async function pasteFromClipboard() {
             try {
                 if (navigator.clipboard && navigator.clipboard.readText) {
@@ -147,8 +153,8 @@
             }
         }
 
-        // ✅ नया फ़ंक्शन: मीडिया लिंक फेच करने का ड्रामा (प्रोसेसिंग दिखाने के लिए)
-        function processMedia() {
+        // Cobalt API से वीडियो/ऑडियो फ़ाइल फेच करने का असली फंक्शन
+        async function processMedia() {
             const urlInput = document.getElementById('mediaUrl').value.trim();
             if (!urlInput) {
                 alert("Please paste a valid video URL first!");
@@ -158,35 +164,25 @@
             const loadingArea = document.getElementById('loadingArea');
             const resultArea = document.getElementById('resultArea');
             const videoTitle = document.getElementById('videoTitle');
+            const fileIcon = document.getElementById('fileIcon');
+            const btnFetch = document.getElementById('btnFetch');
 
-            // रीसेट व्यूज
+            // UI स्टेट रीसेट करें
             loadingArea.classList.remove('hidden');
             resultArea.classList.add('hidden');
+            btnFetch.disabled = true;
+            btnFetch.innerText = "⚡ Fetching...";
 
-            // 3 सेकंड का नकली टाइमर (API फेचिंग की तरह दिखने के लिए)
-            setTimeout(() => {
-                loadingArea.classList.add('hidden');
-                resultArea.classList.remove('hidden');
-                
-                // फॉर्मेट टाइप चेक करें
-                const format = document.querySelector('input[name="format"]:checked').value;
-                videoTitle.innerText = "⚡ Media_File_" + Date.now() + "." + format;
+            const selectedFormat = document.querySelector('input[name="format"]:checked').value;
+            const isAudioOnly = (selectedFormat === "mp3");
 
-                // यहाँ आप अपनी असली डाउनलोड लिंक डाल सकते हैं (अभी यह गूगल पर रीडायरेक्ट करेगी)
-                realDownloadUrl = "https://google.com"; 
-            }, 3000);
-        }
+            // फॉर्मेट के हिसाब से आइकॉन बदलें
+            fileIcon.innerText = isAudioOnly ? "🎵" : "🎬";
 
-        // ✅ नया फ़ंक्शन: डाउनलोड बटन पर क्लिक करने पर एड खोलना और डाउनलोड शुरू करना
-        function triggerAdAndDownload() {
-            // 1. नए टैब में विज्ञापन खोलें
-            window.open(DIRECT_LINK_AD_URL, '_blank');
-
-            // 2. उसी समय यूजर का असली फाइल डाउनलोड शुरू करें
-            if(realDownloadUrl) {
-                window.location.href = realDownloadUrl;
-            }
-        }
-    </script>
-</body>
-</html>
+            try {
+                // Cobalt Open API को पोस्ट रिक्वेस्ट भेजना
+                const response = await fetch("https://cobalt.tools", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
