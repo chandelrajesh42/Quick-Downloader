@@ -91,15 +91,15 @@
         <!-- LOADING ANIMATION -->
         <div id="loadingArea" class="hidden mt-6 text-center">
             <div class="loader rounded-full border-4 border-slate-800 border-t-4 h-9 w-9 mx-auto mb-2"></div>
-            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Fetching direct media file...</p>
+            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Processing media link...</p>
         </div>
 
         <!-- DOWNLOAD BUTTON RESULT -->
         <div id="resultArea" class="hidden mt-6 p-4 bg-slate-950 border border-emerald-500/30 rounded-xl text-center">
-            <p class="text-emerald-400 text-sm font-semibold mb-3">✓ File Extracted Successfully!</p>
-            <a id="downloadBtn" href="#" download target="_blank" onclick="triggerAd()" 
+            <p class="text-emerald-400 text-sm font-semibold mb-3">✓ Video Link Ready!</p>
+            <a id="downloadBtn" href="#" target="_blank" onclick="triggerAd()" 
                 class="inline-block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg shadow-emerald-500/20 text-sm tracking-wide">
-                ⬇️ DIRECT DOWNLOAD NOW
+                ⬇️ DOWNLOAD FILE NOW
             </a>
         </div>
     </main>
@@ -127,7 +127,7 @@
         © 2026 Quick Downloader. All rights reserved.
     </footer>
 
-    <!-- DIRECT MEDIA ENGINE -->
+    <!-- FINAL JAVASCRIPT LOGIC -->
     <script>
         const DIRECT_LINK_AD_URL = "https://your-direct-link-ad-url.com";
 
@@ -154,13 +154,13 @@
             }
         }
 
-        async function processMedia() {
+        function processMedia() {
             const urlInput = document.getElementById('mediaUrl').value.trim();
             const format = document.querySelector('input[name="format"]:checked').value;
             const loadingArea = document.getElementById('loadingArea');
             const resultArea = document.getElementById('resultArea');
-            const statusText = document.getElementById('statusText');
             const btnFetch = document.getElementById('btnFetch');
+            const downloadBtn = document.getElementById('downloadBtn');
 
             if (!urlInput) {
                 alert('Please paste a video or audio link first!');
@@ -172,40 +172,20 @@
             loadingArea.classList.remove('hidden');
             resultArea.classList.add('hidden');
 
-            statusText.innerText = "Extracting video/audio stream...";
-
-            let directDownloadLink = "";
-
-            try {
-                // High-speed API proxy call for direct mp4/mp3 stream extraction
-                const apiRes = await fetch(`https://api.vkrdown.com/v1/main?url=${encodeURIComponent(urlInput)}`);
-                const data = await apiRes.json();
-
-                if (data && data.data && data.data.downloadUrl) {
-                    directDownloadLink = data.data.downloadUrl;
-                } else if (data && data.data && data.data.downloads && data.data.downloads[0]) {
-                    directDownloadLink = data.data.downloads[0].url;
-                }
-            } catch (e) {
-                console.log("Direct API retry...");
-            }
-
-            // Fallback for direct media response
-            if (!directDownloadLink) {
-                directDownloadLink = `https://loader.to/api/ajax/download.php?start=1&end=1&format=${format}&url=${encodeURIComponent(urlInput)}`;
-            }
-
+            // Universal Safe Extraction Gateway
+            // This bypasses browser-side API blocks and rate limits.
+            const gatewayUrl = `https://snapsave.app/action.php?url=${encodeURIComponent(urlInput)}`;
+            
+            // Set the download link immediately
+            downloadBtn.href = gatewayUrl;
+            
+            // Minimal processing delay to show loading state
             setTimeout(() => {
                 loadingArea.classList.add('hidden');
                 resultArea.classList.remove('hidden');
-                
-                const dlBtn = document.getElementById('downloadBtn');
-                dlBtn.href = directDownloadLink;
-                dlBtn.setAttribute("download", format === "mp3" ? "audio.mp3" : "video.mp4");
-                
                 btnFetch.disabled = false;
                 btnFetch.classList.remove('opacity-50');
-            }, 1000);
+            }, 800);
         }
 
         function triggerAd() {
