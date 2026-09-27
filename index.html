@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Quick Downloader - Fast HD Video & MP3 Downloader</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,23 +16,25 @@
             100% { transform: rotate(360deg); }
         }
     </style>
+    <!-- POPUP / POPUNDER AD SCRIPT (MONETAG / ADSTERRA) PASTE HERE -->
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans antialiased">
 
     <!-- NAVBAR HEADER -->
     <header class="p-4 bg-slate-900 border-b border-slate-800 text-center flex flex-col items-center justify-center gap-1 shadow-md">
         <div class="flex items-center gap-2">
-            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            <svg class="w-9 h-9" viewBox="0 0 500 500">
+                <circle cx="250" cy="250" r="220" fill="#0f172a" stroke="#38bdf8" stroke-width="12"/>
+                <path d="M250 120 V240 M180 190 L250 260 L320 190 M170 300 H330" fill="none" stroke="#38bdf8" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <h1 class="text-2xl font-black text-blue-500 tracking-wider">Quick Downloader</h1>
         </div>
         <p class="text-xs text-slate-400">Fast & Free Video & MP3 Downloader</p>
     </header>
 
-    <!-- TOP AD BANNER PLACEHOLDER -->
+    <!-- TOP AD BANNER -->
     <div class="w-full text-center my-3 px-2">
-        <div class="inline-block w-full max-w-[728px] p-4 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-600">
+        <div class="inline-block w-full max-w-[728px] min-h-[90px] bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center text-xs text-slate-600">
             [ Top Responsive Banner Ad ]
         </div>
     </div>
@@ -91,23 +93,23 @@
         <!-- LOADING ANIMATION -->
         <div id="loadingArea" class="hidden mt-6 text-center">
             <div class="loader rounded-full border-4 border-slate-800 border-t-4 h-9 w-9 mx-auto mb-2"></div>
-            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Extracting media file...</p>
+            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Connecting to server...</p>
         </div>
 
         <!-- DOWNLOAD BUTTON RESULT -->
         <div id="resultArea" class="hidden mt-6 p-4 bg-slate-950 border border-emerald-500/30 rounded-xl text-center">
-            <p class="text-emerald-400 text-sm font-semibold mb-3">✓ Video Extracted Successfully!</p>
-            <button onclick="openDownloaderWindow()" 
-                class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg shadow-emerald-500/20 text-sm tracking-wide">
-                ⬇️ DOWNLOAD FILE NOW
-            </button>
+            <p class="text-emerald-400 text-sm font-semibold mb-3">✓ File Processed Successfully!</p>
+            <a id="downloadBtn" href="#" target="_blank" onclick="triggerAd()" 
+                class="inline-block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg shadow-emerald-500/20 text-sm tracking-wide">
+                ⬇️ DOWNLOAD NOW
+            </a>
         </div>
     </main>
 
-    <!-- DOWNLOAD & PLATFORM MODAL -->
-    <div id="platformModal" class="fixed inset-0 bg-slate-950/95 z-50 hidden flex-col">
+    <!-- OFFICIAL PLATFORM EMBED MODAL (For Login / Safe Browsing) -->
+    <div id="platformModal" class="fixed inset-0 bg-slate-950/90 z-50 hidden flex-col">
         <div class="p-3 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
-            <span class="text-xs text-slate-400 font-medium">Quick Downloader Safe Server</span>
+            <span class="text-xs text-slate-400 font-medium">Safe Official Login & Browser Window</span>
             <button onclick="closePlatform()" class="bg-red-600/20 text-red-400 border border-red-500/30 px-3 py-1 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white transition">
                 ✕ Close Window
             </button>
@@ -115,9 +117,9 @@
         <iframe id="platformFrame" src="" class="w-full h-full border-none"></iframe>
     </div>
 
-    <!-- MOBILE AD BANNER PLACEHOLDER -->
+    <!-- MOBILE NATIVE AD BANNER -->
     <div class="w-full text-center my-3 px-2">
-        <div class="inline-block w-[300px] h-[250px] p-4 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-600 flex items-center justify-center">
+        <div class="inline-block w-[300px] h-[250px] bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center text-xs text-slate-600">
             [ Mobile / App Banner Ad ]
         </div>
     </div>
@@ -127,77 +129,54 @@
         © 2026 Quick Downloader. All rights reserved.
     </footer>
 
-    <!-- JAVASCRIPT ENGINE -->
+    <!-- JAVASCRIPT LOGIC ENGINE -->
     <script>
         const DIRECT_LINK_AD_URL = "https://your-direct-link-ad-url.com";
-        let activeTargetUrl = "";
 
+        // प्लेटफ़ॉर्म खोलने का फंक्शन (सुरक्षा के लिए कुछ साइट्स नए टैब में खुलेंगी)
         function openPlatform(url) {
-            document.getElementById('platformFrame').src = url;
-            document.getElementById('platformModal').classList.remove('hidden');
-            document.getElementById('platformModal').classList.add('flex');
+            // YouTube, FB, Instagram सुरक्षा कारणों से iframe ब्लॉक करते हैं, इसलिए इन्हें सीधे नए विंडो में खोलना बेहतर है
+            if(url.includes("facebook") || url.includes("instagram") || url.includes("youtube") || url.includes("x.com")) {
+                window.open(url, '_blank');
+            } else {
+                document.getElementById('platformFrame').src = url;
+                document.getElementById('platformModal').classList.remove('hidden');
+                document.getElementById('platformModal').classList.add('flex');
+            }
         }
 
+        // क्लोज विंडो फंक्शन
         function closePlatform() {
             document.getElementById('platformModal').classList.add('hidden');
             document.getElementById('platformModal').classList.remove('flex');
             document.getElementById('platformFrame').src = "";
         }
 
+        // क्लिपबोर्ड से लिंक ऑटोमैटिक पेस्ट करने का फंक्शन
         async function pasteFromClipboard() {
             try {
                 const text = await navigator.clipboard.readText();
-                if (text) {
-                    document.getElementById('mediaUrl').value = text;
-                }
+                document.getElementById('mediaUrl').value = text;
             } catch (err) {
-                alert('Please paste the URL manually.');
+                alert("Please allow clipboard permission or paste manually.");
             }
         }
 
+        // डाउनलोड लिंक फेच (सिमुलेशन) करने का फंक्शन
         function processMedia() {
-            const urlInput = document.getElementById('mediaUrl').value.trim();
-            const format = document.querySelector('input[name="format"]:checked').value;
-            const loadingArea = document.getElementById('loadingArea');
-            const resultArea = document.getElementById('resultArea');
-            const btnFetch = document.getElementById('btnFetch');
-
+            const urlInput = document.getElementById('mediaUrl').value;
             if (!urlInput) {
-                alert('Please paste a video or audio link first!');
+                alert("Please enter a valid URL first!");
                 return;
             }
 
-            btnFetch.disabled = true;
-            btnFetch.classList.add('opacity-50');
-            loadingArea.classList.remove('hidden');
-            resultArea.classList.add('hidden');
-
-            if (urlInput.includes("instagram.com")) {
-                activeTargetUrl = `https://snapinsta.app/`;
-            } else if (urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) {
-                activeTargetUrl = `https://y2mate.is/`;
-            } else {
-                activeTargetUrl = `https://snapsave.app/`;
-            }
-
+            // लोडिंग एरिया दिखाएं और पुराना रिजल्ट छुपाएं
+            document.getElementById('loadingArea').classList.remove('hidden');
+            document.getElementById('resultArea').classList.add('hidden');
+            
+            // 2 सेकंड का फेक सर्वर रिस्पॉन्स टाइमर
             setTimeout(() => {
-                loadingArea.classList.add('hidden');
-                resultArea.classList.remove('hidden');
-                btnFetch.disabled = false;
-                btnFetch.classList.remove('opacity-50');
-            }, 800);
-        }
-
-        function openDownloaderWindow() {
-            triggerAd();
-            openPlatform(activeTargetUrl);
-        }
-
-        function triggerAd() {
-            if (DIRECT_LINK_AD_URL && DIRECT_LINK_AD_URL !== "https://your-direct-link-ad-url.com") {
-                window.open(DIRECT_LINK_AD_URL, '_blank');
-            }
-        }
-    </script>
-</body>
-</html>
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('resultArea').classList.remove('hidden');
+                
+                // यहां आप अपना असली API डाउनलोड लिंक सेट कर सकते हैं
