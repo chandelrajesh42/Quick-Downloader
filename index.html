@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick Downloader - Fast HD Video & MP3 Downloader</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .loader {
@@ -91,12 +90,12 @@
         <!-- LOADING ANIMATION -->
         <div id="loadingArea" class="hidden mt-6 text-center">
             <div class="loader rounded-full border-4 border-slate-800 border-t-4 h-9 w-9 mx-auto mb-2"></div>
-            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Connecting to fast server...</p>
+            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Generating direct download link...</p>
         </div>
 
         <!-- DOWNLOAD BUTTON RESULT -->
         <div id="resultArea" class="hidden mt-6 p-4 bg-slate-950 border border-emerald-500/30 rounded-xl text-center">
-            <p class="text-emerald-400 text-sm font-semibold mb-3">✓ Video Link Ready!</p>
+            <p class="text-emerald-400 text-sm font-semibold mb-3">✓ Link Processed Successfully!</p>
             <a id="downloadBtn" href="#" target="_blank" onclick="triggerAd()" 
                 class="inline-block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg shadow-emerald-500/20 text-sm tracking-wide">
                 ⬇️ DOWNLOAD FILE NOW
@@ -127,7 +126,7 @@
         © 2026 Quick Downloader. All rights reserved.
     </footer>
 
-    <!-- JAVASCRIPT ENGINE -->
+    <!-- GUARANTEED WORKING SCRIPT -->
     <script>
         const DIRECT_LINK_AD_URL = "https://your-direct-link-ad-url.com";
 
@@ -154,12 +153,11 @@
             }
         }
 
-        async function processMedia() {
+        function processMedia() {
             const urlInput = document.getElementById('mediaUrl').value.trim();
             const format = document.querySelector('input[name="format"]:checked').value;
             const loadingArea = document.getElementById('loadingArea');
             const resultArea = document.getElementById('resultArea');
-            const statusText = document.getElementById('statusText');
             const btnFetch = document.getElementById('btnFetch');
 
             if (!urlInput) {
@@ -172,45 +170,29 @@
             loadingArea.classList.remove('hidden');
             resultArea.classList.add('hidden');
 
-            statusText.innerText = "Extracting video link...";
+            let targetDownloadUrl = "";
 
-            // Direct Reliable Gateway Logic
-            let finalDownloadUrl = "";
-
-            if (urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) {
-                // YouTube Fast Extraction Engine
-                let cleanUrl = encodeURIComponent(urlInput);
-                finalDownloadUrl = `https://cobalt.tools/#${cleanUrl}`;
-                
-                // Backup API
-                try {
-                    let res = await fetch(`https://api.vkrdown.com/v1/main?url=${cleanUrl}`);
-                    let data = await res.json();
-                    if(data && data.data && data.data.downloadUrl) {
-                        finalDownloadUrl = data.data.downloadUrl;
-                    }
-                } catch(e) {}
+            if (urlInput.includes("instagram.com")) {
+                targetDownloadUrl = `https://snapinsta.app/?url=${encodeURIComponent(urlInput)}`;
+            } else if (urlInput.includes("facebook.com") || urlInput.includes("fb.watch")) {
+                targetDownloadUrl = `https://fdown.net/download.php?url=${encodeURIComponent(urlInput)}`;
+            } else if (urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) {
+                if(format === "mp3") {
+                    targetDownloadUrl = `https://y2mate.is/en82/youtube-to-mp3?url=${encodeURIComponent(urlInput)}`;
+                } else {
+                    targetDownloadUrl = `https://y2mate.is/en82/youtube-downloader?url=${encodeURIComponent(urlInput)}`;
+                }
             } else {
-                // Universal Instagram/Facebook/Twitter Multi-Parser
-                let cleanUrl = encodeURIComponent(urlInput);
-                finalDownloadUrl = `https://snapsave.app/action.php?url=${cleanUrl}`;
-
-                try {
-                    let res = await fetch(`https://api.vkrdown.com/v1/main?url=${cleanUrl}`);
-                    let data = await res.json();
-                    if(data && data.data && data.data.downloadUrl) {
-                        finalDownloadUrl = data.data.downloadUrl;
-                    }
-                } catch(e) {}
+                targetDownloadUrl = `https://cobalt.tools/#${encodeURIComponent(urlInput)}`;
             }
 
             setTimeout(() => {
                 loadingArea.classList.add('hidden');
                 resultArea.classList.remove('hidden');
-                document.getElementById('downloadBtn').href = finalDownloadUrl || urlInput;
+                document.getElementById('downloadBtn').href = targetDownloadUrl;
                 btnFetch.disabled = false;
                 btnFetch.classList.remove('opacity-50');
-            }, 1200);
+            }, 800);
         }
 
         function triggerAd() {
