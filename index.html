@@ -100,11 +100,11 @@
 
             <p id="mediaTitle" class="text-xs text-slate-300 font-medium truncate">Ready for Direct Download</p>
 
-            <!-- DIRECT DOWNLOAD ACTION -->
-            <a id="downloadBtn" href="#" target="_blank" rel="noopener noreferrer" onclick="triggerAd()"
-                class="block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg text-sm tracking-wide">
+            <!-- DIRECT DOWNLOAD ACTION BUTTON -->
+            <button id="downloadBtn" onclick="handleDirectDownload()"
+                class="block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg text-sm tracking-wide cursor-pointer">
                 ⬇️ DIRECT DOWNLOAD FILE NOW
-            </a>
+            </button>
         </div>
     </main>
 
@@ -119,9 +119,13 @@
         © 2026 Quick Downloader. All rights reserved.
     </footer>
 
-    <!-- ENGINE SCRIPT WITH MULTI-API FALLBACK -->
+    <!-- UPDATED ENGINE SCRIPT -->
     <script>
+        // Monetag ya Adsterra का Direct Link Ad URL यहाँ डालें
         const DIRECT_LINK_AD_URL = "https://your-direct-link-ad-url.com";
+
+        let finalDirectStreamUrl = "";
+        let currentFileFormat = "mp4";
 
         async function pasteFromClipboard() {
             try {
@@ -135,13 +139,14 @@
         async function processMedia() {
             const urlInput = document.getElementById('mediaUrl').value.trim();
             const format = document.querySelector('input[name="format"]:checked').value;
+            currentFileFormat = format;
+
             const loadingArea = document.getElementById('loadingArea');
             const resultArea = document.getElementById('resultArea');
             const btnFetch = document.getElementById('btnFetch');
             const previewImg = document.getElementById('previewImg');
             const thumbFallback = document.getElementById('thumbFallback');
             const mediaTitle = document.getElementById('mediaTitle');
-            const downloadBtn = document.getElementById('downloadBtn');
 
             if (!urlInput) {
                 alert('Please paste a valid video or reel link first!');
@@ -155,59 +160,77 @@
             previewImg.classList.add('hidden');
             thumbFallback.classList.remove('hidden');
 
-            let directMediaUrl = "";
+            finalDirectStreamUrl = "";
             let thumbnailUrl = "";
-            let videoTitle = "Media Extracted Successfully";
+            let videoTitle = "Direct File Extracted";
 
-            // --- PRIMARY SERVER: COBALT PUBLIC INSTANCE ---
+            // --- API ENGINE 1: Rapid Multi-Server Direct Scraper ---
             try {
-                const res = await fetch("https://co.wuk.sh/api/json", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                    body: JSON.stringify({ url: urlInput, isAudioOnly: (format === "mp3") })
-                });
+                const res = await fetch(`https://api.vkrdownloader.workers.dev/?url=${encodeURIComponent(urlInput)}`);
                 const data = await res.json();
-                if (data && data.url) {
-                    directMediaUrl = data.url;
-                    if (data.thumb) thumbnailUrl = data.thumb;
-                    if (data.text) videoTitle = data.text;
+                
+                if (data && data.data) {
+                    if (format === 'mp3' && data.data.audioUrl) {
+                        finalDirectStreamUrl = data.data.audioUrl;
+                    } else if (data.data.downloadUrl) {
+                        finalDirectStreamUrl = data.data.downloadUrl;
+                    } else if (data.data.downloads && data.data.downloads.length > 0) {
+                        finalDirectStreamUrl = data.data.downloads[0].url;
+                    }
+                    if (data.data.thumbnail) thumbnailUrl = data.data.thumbnail;
+                    if (data.data.title) videoTitle = data.data.title;
                 }
             } catch (e) {
-                console.log("Primary API failed, trying Fallback Engine...");
+                console.log("Engine 1 failed, trying Engine 2...");
             }
 
-            // --- SECONDARY FALLBACK SERVER: VKR MULTI-ENGINE ---
-            if (!directMediaUrl) {
-                try {
-                    const fallbackRes = await fetch(`https://vkrdownloader.vercel.app/server?vkr=${encodeURIComponent(urlInput)}`);
-                    const fallbackData = await fallbackRes.json();
-                    if (fallbackData && fallbackData.data && fallbackData.data.downloadUrl) {
-                        directMediaUrl = fallbackData.data.downloadUrl;
-                        if (fallbackData.data.thumbnail) thumbnailUrl = fallbackData.data.thumbnail;
-                        if (fallbackData.data.title) videoTitle = fallbackData.data.title;
+            // --- API ENGINE 2: Cobalt Multi-Instance Fallback ---
+            if (!finalDirectStreamUrl) {
+                const instances = [
+                    "https://cobalt.api.scld.tech",
+                    "https://api.cobalt.tools",
+                    "https://co.wuk.sh"
+                ];
+
+                for (let instance of instances) {
+                    try {
+                        const res = await fetch(`${instance}/api/json`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                            body: JSON.stringify({ 
+                                url: urlInput, 
+                                isAudioOnly: (format === "mp3"),
+                                aBitrate: "320",
+                                vQuality: "720"
+                            })
+                        });
+                        const data = await res.json();
+                        if (data && data.url) {
+                            finalDirectStreamUrl = data.url;
+                            if (data.thumb) thumbnailUrl = data.thumb;
+                            if (data.text) videoTitle = data.text;
+                            break;
+                        }
+                    } catch (err) {
+                        continue;
                     }
-                } catch (e) {
-                    console.log("Fallback API failed.");
                 }
             }
 
-            // --- FINAL GATEWAY IF DIRECT API STREAM BLOCKED ---
-            if (!directMediaUrl) {
-                const encodedUrl = encodeURIComponent(urlInput);
+            // --- ENGINE 3: Smart External Gateway Fallback ---
+            if (!finalDirectStreamUrl) {
                 if (urlInput.includes("instagram.com")) {
-                    directMediaUrl = `https://snapinsta.app/`;
+                    finalDirectStreamUrl = `https://snapinsta.app/`;
                 } else if (urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) {
-                    directMediaUrl = `https://y2mate.is/`;
+                    finalDirectStreamUrl = `https://y2mate.is/`;
                 } else {
-                    directMediaUrl = `https://snapsave.app/`;
+                    finalDirectStreamUrl = `https://snapsave.app/`;
                 }
             }
 
-            // SET VALUES TO UI
-            downloadBtn.href = directMediaUrl;
             mediaTitle.innerText = videoTitle;
 
-            // HANDLE THUMBNAIL WITH CORS PROXY
+            // Handle Thumbnail Output
             if (thumbnailUrl) {
                 previewImg.src = "https://images.weserv.nl/?url=" + encodeURIComponent(thumbnailUrl);
                 previewImg.classList.remove('hidden');
@@ -220,9 +243,42 @@
             btnFetch.classList.remove('opacity-50');
         }
 
-        function triggerAd() {
+        // ONE-CLICK DIRECT DOWNLOAD AND AD TRIGGER LOGIC
+        async function handleDirectDownload() {
+            // 1. Direct Ad Link Open (If configured)
             if (DIRECT_LINK_AD_URL && DIRECT_LINK_AD_URL !== "https://your-direct-link-ad-url.com") {
                 window.open(DIRECT_LINK_AD_URL, '_blank');
+            }
+
+            if (!finalDirectStreamUrl) return;
+
+            // 2. Direct File Download Handling (Blob Force Download)
+            if (finalDirectStreamUrl.startsWith('http')) {
+                const downloadBtn = document.getElementById('downloadBtn');
+                const originalText = downloadBtn.innerText;
+                downloadBtn.innerText = "⏳ Downloading file to device...";
+
+                try {
+                    // CORS Bypassing Download Logic
+                    const response = await fetch(finalDirectStreamUrl);
+                    const blob = await response.blob();
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = blobUrl;
+                    a.download = `QuickDownloader_${Date.now()}.${currentFileFormat}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    
+                    window.URL.revokeObjectURL(blobUrl);
+                    document.body.removeChild(a);
+                } catch (e) {
+                    // Fallback to Direct Window Location if Blob fails
+                    window.location.href = finalDirectStreamUrl;
+                } finally {
+                    downloadBtn.innerText = originalText;
+                }
             }
         }
     </script>
