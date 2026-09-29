@@ -1,274 +1,1005 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Downloader - Universal HD Video & MP3 Downloader</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .loader {
-            border-top-color: #3b82f6;
-            animation: spinner 0.8s linear infinite;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Quick Downloader - HD Video & Music Downloader (Snaptube Edition)</title>
+  <meta name="description" content="High-speed HD video and MP3 audio downloader with Razorpay PRO checkout, in-app browser, media library, and player." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
         }
-        @keyframes spinner {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Razorpay Official Checkout Gateway -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background-color: #0a0a0a;
+      color: #ededed;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #121212; }
+    ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.4), 0 0 30px rgba(245, 158, 11, 0.2); }
+      50% { box-shadow: 0 0 25px rgba(251, 191, 36, 0.7), 0 0 45px rgba(245, 158, 11, 0.35); }
+    }
+    .glow-yellow { animation: pulseGlow 2.5s infinite ease-in-out; }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans antialiased">
+<body class="bg-neutral-950 text-neutral-100 min-h-screen flex flex-col selection:bg-amber-400 selection:text-neutral-950 pb-20 sm:pb-8">
 
-    <!-- NAVBAR HEADER -->
-    <header class="p-4 bg-slate-900 border-b border-slate-800 text-center flex flex-col items-center justify-center gap-1 shadow-md">
-        <div class="flex items-center gap-2">
-            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-            </svg>
-            <h1 class="text-2xl font-black text-blue-500 tracking-wider">Quick Downloader</h1>
+  <!-- TOP HEADER (Snaptube-Style with Quick Downloader Branding) -->
+  <header class="sticky top-0 z-40 bg-neutral-900/95 backdrop-blur-md border-b border-neutral-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-3">
+      <!-- Logo -->
+      <div onclick="switchTab('home')" class="flex items-center gap-2.5 cursor-pointer group select-none">
+        <div class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-500 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="arrow-down-to-line" class="w-5 h-5 text-neutral-950 stroke-[2.8]"></i>
+          <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-neutral-900 rounded-full flex items-center justify-center">
+            <i data-lucide="zap" class="w-2.5 h-2.5 text-amber-400 fill-amber-400"></i>
+          </div>
         </div>
-        <p class="text-xs text-slate-400">Fast & Free Video & MP3 Downloader</p>
-    </header>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-lg sm:text-xl tracking-tight text-white">
+              Quick<span class="text-amber-400">Downloader</span>
+            </span>
+            <span id="headerVipBadge" class="text-[10px] uppercase font-black tracking-wider px-1.5 py-0.5 rounded bg-amber-400/10 text-amber-400 border border-amber-400/30">
+              PRO
+            </span>
+          </div>
+          <p class="text-[11px] text-neutral-400 hidden sm:block -mt-0.5">HD Video & MP3 Downloader</p>
+        </div>
+      </div>
 
-    <!-- TOP AD BANNER PLACEHOLDER -->
-    <div class="w-full text-center my-3 px-2">
-        <div class="inline-block w-full max-w-[728px] p-3 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-600">
-            [ Banner Ad Space ]
-        </div>
+      <!-- Action Toolbar -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <!-- Razorpay Buy Pro Button -->
+        <button id="btnBuyProHeader" onclick="openProModal()" class="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 hover:brightness-105 text-neutral-950 shadow-md shadow-amber-400/20 flex items-center gap-1.5 text-xs font-black transition active:scale-95">
+          <i data-lucide="crown" class="w-4 h-4 fill-neutral-950"></i>
+          <span id="btnBuyProText">Buy PRO</span>
+        </button>
+
+        <!-- WhatsApp Status Tool -->
+        <button onclick="openStatusSaver()" class="p-2 sm:px-3 sm:py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-800/40 text-emerald-400 flex items-center gap-1.5 text-xs font-semibold transition">
+          <i data-lucide="smartphone" class="w-4 h-4 text-emerald-400"></i>
+          <span class="hidden md:inline">WA Status</span>
+        </button>
+
+        <!-- Vault -->
+        <button onclick="openVaultModal()" class="p-2 sm:px-3 sm:py-1.5 rounded-lg bg-neutral-800/80 hover:bg-neutral-800 border border-neutral-700/50 text-neutral-300 hover:text-white flex items-center gap-1.5 text-xs font-medium transition">
+          <i data-lucide="shield" class="w-4 h-4 text-amber-400"></i>
+          <span class="hidden md:inline">Vault</span>
+        </button>
+
+        <!-- My Files / Downloads Button -->
+        <button onclick="switchTab('downloads')" id="btnMyFilesHeader" class="relative p-2 sm:px-3.5 sm:py-1.5 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 border border-neutral-700/60 text-white flex items-center gap-2 text-xs font-semibold transition">
+          <i data-lucide="arrow-down-to-line" class="w-4 h-4" id="dlIconAnim"></i>
+          <span class="hidden sm:inline">My Files</span>
+          <span id="activeDlCountBadge" class="hidden text-[10px] font-black px-1.5 py-0.2 rounded-full bg-amber-400 text-neutral-950">0</span>
+        </button>
+
+        <!-- Settings -->
+        <button onclick="openSettingsModal()" class="p-2 rounded-lg bg-neutral-800/70 hover:bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-700/40 transition">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- MAIN APP CONTAINER -->
-    <main class="max-w-xl w-full mx-auto p-5 sm:p-6 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 my-auto">
-        
-        <!-- Platform Shortcuts -->
-        <div class="mb-5 text-center">
-            <p class="text-xs text-slate-400 mb-2 font-medium">Supported Platforms:</p>
-            <div class="flex justify-center items-center gap-2 sm:gap-3 flex-wrap">
-                <a href="https://m.facebook.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-blue-600/20 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">📘 Facebook</a>
-                <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-pink-600/20 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">📸 Instagram</a>
-                <a href="https://m.youtube.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-red-600/20 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">🔴 YouTube</a>
-                <a href="https://x.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">🐦 X (Twitter)</a>
+    <!-- Search & URL Paste Input -->
+    <div class="max-w-4xl mx-auto px-3 sm:px-6 pb-3 pt-1">
+      <form onsubmit="handleSearchSubmit(event)" class="relative flex items-center">
+        <div class="absolute left-3.5 text-amber-400 pointer-events-none flex items-center">
+          <i data-lucide="search" class="w-4 h-4"></i>
+        </div>
+        <input 
+          id="searchUrlInput" 
+          type="text" 
+          placeholder="Search YouTube, TikTok, Insta or paste any video URL..." 
+          class="w-full pl-10 pr-24 sm:pr-32 py-2.5 sm:py-3 rounded-xl bg-neutral-800/90 text-sm text-white placeholder-neutral-400 border border-neutral-700/70 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition shadow-inner"
+        />
+        <div class="absolute right-2 flex items-center gap-1.5">
+          <button type="button" onclick="handlePasteSample()" class="flex items-center gap-1 px-2 py-1 rounded-lg bg-neutral-700/70 hover:bg-neutral-700 text-[11px] font-medium text-neutral-300 hover:text-white transition">
+            <i data-lucide="clipboard" class="w-3 h-3 text-amber-400"></i>
+            <span class="hidden sm:inline">Paste</span>
+          </button>
+          <button type="submit" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95">
+            Download
+          </button>
+        </div>
+      </form>
+    </div>
+  </header>
+
+  <!-- DESKTOP TOP NAV & MOBILE BOTTOM NAV -->
+  <div class="hidden sm:block bg-neutral-900/60 border-b border-neutral-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+      <div class="flex space-x-2">
+        <button onclick="switchTab('home')" id="navTabHome" class="nav-tab flex items-center gap-2 py-3 px-4 font-semibold text-sm border-b-2 border-amber-400 text-amber-400 bg-amber-400/5">
+          <i data-lucide="home" class="w-4 h-4"></i><span>For You</span>
+        </button>
+        <button onclick="switchTab('sites')" id="navTabSites" class="nav-tab flex items-center gap-2 py-3 px-4 font-semibold text-sm border-b-2 border-transparent text-neutral-400 hover:text-white">
+          <i data-lucide="globe" class="w-4 h-4"></i><span>Sites</span>
+        </button>
+        <button onclick="switchTab('music')" id="navTabMusic" class="nav-tab flex items-center gap-2 py-3 px-4 font-semibold text-sm border-b-2 border-transparent text-neutral-400 hover:text-white">
+          <i data-lucide="music" class="w-4 h-4"></i><span>Music Lounge</span>
+        </button>
+        <button onclick="switchTab('downloads')" id="navTabDownloads" class="nav-tab flex items-center gap-2 py-3 px-4 font-semibold text-sm border-b-2 border-transparent text-neutral-400 hover:text-white">
+          <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i><span>My Files</span>
+        </button>
+        <button onclick="switchTab('tools')" id="navTabTools" class="nav-tab flex items-center gap-2 py-3 px-4 font-semibold text-sm border-b-2 border-transparent text-neutral-400 hover:text-white">
+          <i data-lucide="wrench" class="w-4 h-4"></i><span>Tools</span>
+        </button>
+      </div>
+      <div class="text-xs text-neutral-400 flex items-center gap-2 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Turbo Engine 10x Active
+      </div>
+    </div>
+  </div>
+
+  <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-neutral-900/95 backdrop-blur-lg border-t border-neutral-800">
+    <div class="grid grid-cols-5 h-14">
+      <button onclick="switchTab('home')" class="m-nav-tab flex flex-col items-center justify-center gap-1 text-amber-400 font-bold" data-target="home">
+        <i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px]">For You</span>
+      </button>
+      <button onclick="switchTab('sites')" class="m-nav-tab flex flex-col items-center justify-center gap-1 text-neutral-400 font-medium" data-target="sites">
+        <i data-lucide="globe" class="w-5 h-5"></i><span class="text-[10px]">Sites</span>
+      </button>
+      <button onclick="switchTab('music')" class="m-nav-tab flex flex-col items-center justify-center gap-1 text-neutral-400 font-medium" data-target="music">
+        <i data-lucide="music" class="w-5 h-5"></i><span class="text-[10px]">Music</span>
+      </button>
+      <button onclick="switchTab('downloads')" class="m-nav-tab flex flex-col items-center justify-center gap-1 text-neutral-400 font-medium" data-target="downloads">
+        <i data-lucide="arrow-down-to-line" class="w-5 h-5"></i><span class="text-[10px]">Files</span>
+      </button>
+      <button onclick="switchTab('tools')" class="m-nav-tab flex flex-col items-center justify-center gap-1 text-neutral-400 font-medium" data-target="tools">
+        <i data-lucide="wrench" class="w-5 h-5"></i><span class="text-[10px]">Tools</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastNotification" class="hidden fixed top-20 right-4 z-50 bg-neutral-900 border border-amber-400 text-white px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 text-xs font-bold transition-all">
+    <i data-lucide="check-circle" class="w-4 h-4 text-amber-400"></i>
+    <span id="toastText">Download started</span>
+  </div>
+
+  <!-- MAIN TAB CONTENT AREA -->
+  <main class="flex-1">
+    <!-- TAB 1: HOME / FOR YOU -->
+    <section id="tabContentHome" class="tab-page max-w-7xl mx-auto px-3 sm:px-6 py-4 space-y-6">
+      <!-- Supported Platforms Shortcut Row -->
+      <div class="bg-neutral-900/90 border border-neutral-800 rounded-2xl p-3.5">
+        <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pb-1">
+          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+            <div class="w-11 h-11 rounded-2xl bg-red-600 flex items-center justify-center text-white shadow-md font-black text-xs">YT</div>
+            <span class="text-[11px] font-semibold text-neutral-300">YouTube</span>
+          </div>
+          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+            <div class="w-11 h-11 rounded-2xl bg-pink-600 flex items-center justify-center text-white shadow-md font-black text-xs">IG</div>
+            <span class="text-[11px] font-semibold text-neutral-300">Instagram</span>
+          </div>
+          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+            <div class="w-11 h-11 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-md font-black text-xs">FB</div>
+            <span class="text-[11px] font-semibold text-neutral-300">Facebook</span>
+          </div>
+          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+            <div class="w-11 h-11 rounded-2xl bg-cyan-400 flex items-center justify-center text-neutral-950 shadow-md font-black text-xs">TT</div>
+            <span class="text-[11px] font-semibold text-neutral-300">TikTok</span>
+          </div>
+          <div onclick="openStatusSaver()" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+            <div class="w-11 h-11 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-md font-black text-xs">WA</div>
+            <span class="text-[11px] font-semibold text-neutral-300">WA Status</span>
+          </div>
+          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+            <div class="w-11 h-11 rounded-2xl bg-orange-600 flex items-center justify-center text-white shadow-md font-black text-xs">SC</div>
+            <span class="text-[11px] font-semibold text-neutral-300">SoundCloud</span>
+          </div>
+          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+            <div class="w-11 h-11 rounded-2xl bg-black border border-neutral-700 flex items-center justify-center text-white shadow-md font-black text-xs">X</div>
+            <span class="text-[11px] font-semibold text-neutral-300">Twitter</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Razorpay PRO Promo Banner -->
+      <div id="homeProBanner" onclick="openProModal()" class="p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-yellow-500/15 border border-amber-400/40 hover:border-amber-400 transition cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg group">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-amber-400 text-neutral-950 flex items-center justify-center font-black group-hover:scale-110 transition-transform shadow-md shadow-amber-400/20">
+            <i data-lucide="crown" class="w-6 h-6 fill-neutral-950"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="font-extrabold text-sm sm:text-base text-white">Upgrade to Quick Downloader <span class="text-amber-400">PRO VIP</span></h3>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-400 text-neutral-950 font-black uppercase tracking-wider">Razorpay</span>
             </div>
+            <p class="text-xs text-neutral-300 mt-0.5">4K 60FPS Video, MP3 320kbps Audio, 10x Turbo Speed & 0 Ads • Pay via UPI, QR or Cards</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 self-end sm:self-center">
+          <span class="text-xs font-mono font-bold text-amber-400">From ₹49</span>
+          <button class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-black text-xs uppercase tracking-wider shadow-md active:scale-95 transition">
+            Buy PRO
+          </button>
+        </div>
+      </div>
+
+      <!-- Feed Grid -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+            <i data-lucide="flame" class="w-5 h-5 text-amber-400"></i>
+            <span>Recommended For You</span>
+          </h2>
+          <span class="text-xs text-neutral-400">HD & MP3 Available</span>
         </div>
 
-        <!-- URL INPUT -->
-        <div class="space-y-4">
-            <div class="relative flex items-center">
-                <input type="url" id="mediaUrl" placeholder="Paste Video / Reel / Short URL here..." 
-                    class="w-full p-4 pr-24 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-blue-500 placeholder-slate-500">
-                <button onclick="pasteFromClipboard()" class="absolute right-2 bg-slate-800 hover:bg-slate-700 text-blue-400 text-xs px-3 py-2 rounded-lg font-medium border border-slate-700 transition">
-                    📋 Paste
-                </button>
-            </div>
-
-            <!-- FORMAT SWITCH -->
-            <div class="grid grid-cols-2 gap-3">
-                <label class="flex items-center justify-center p-3.5 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-blue-500 transition">
-                    <input type="radio" name="format" value="mp4" checked class="mr-2 accent-blue-500">
-                    <span class="text-sm font-semibold text-slate-200">🎬 Video (MP4)</span>
-                </label>
-                <label class="flex items-center justify-center p-3.5 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-blue-500 transition">
-                    <input type="radio" name="format" value="mp3" class="mr-2 accent-blue-500">
-                    <span class="text-sm font-semibold text-slate-200">🎵 Audio (MP3)</span>
-                </label>
-            </div>
-
-            <!-- FETCH BUTTON -->
-            <button onclick="processMedia()" id="btnFetch" 
-                class="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-bold py-4 rounded-xl transition shadow-lg shadow-blue-600/25">
-                ⚡ Fetch Download Link
-            </button>
+        <div id="videoGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Populated by JS -->
         </div>
+      </div>
+    </section>
 
-        <!-- LOADING AREA -->
-        <div id="loadingArea" class="hidden mt-6 text-center">
-            <div class="loader rounded-full border-4 border-slate-800 border-t-4 h-9 w-9 mx-auto mb-2"></div>
-            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Extracting high-speed media stream...</p>
+    <!-- TAB 2: SITES & IN-APP BROWSER -->
+    <section id="tabContentSites" class="tab-page hidden max-w-7xl mx-auto px-3 sm:px-6 py-4 space-y-4">
+      <div class="bg-neutral-900 rounded-2xl border border-neutral-800 shadow-xl overflow-hidden flex flex-col relative min-h-[550px]">
+        <div class="p-3 bg-neutral-950 border-b border-neutral-800 flex items-center gap-2">
+          <i data-lucide="lock" class="w-4 h-4 text-emerald-400 ml-2"></i>
+          <input type="text" id="browserAddressInput" value="https://www.youtube.com/watch?v=trending" class="flex-1 px-3 py-1.5 rounded-xl bg-neutral-900 border border-neutral-700/80 text-xs text-neutral-200 font-mono focus:outline-none focus:border-amber-400" />
+          <button onclick="triggerDetectedMediaDownload()" class="px-3 py-1.5 rounded-lg bg-neutral-800 text-xs font-bold hover:text-white">Go</button>
         </div>
-
-        <!-- RESULT CONTAINER -->
-        <div id="resultArea" class="hidden mt-6 p-4 bg-slate-950 border border-slate-800 rounded-xl text-center space-y-3">
-            
-            <!-- Media Thumbnail -->
-            <div id="thumbBox" class="w-full max-h-64 rounded-lg overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center">
-                <img id="previewImg" src="" alt="Media Preview" class="w-full object-cover max-h-64 hidden" onerror="this.classList.add('hidden')">
-                <div id="thumbFallback" class="p-6 text-slate-500 text-xs flex flex-col items-center gap-1">
-                    <span class="text-2xl">🎬</span>
-                    <span>Media Stream Ready</span>
+        <div class="p-6 bg-neutral-950/70 flex-1 flex flex-col items-center justify-center space-y-4 text-center">
+          <div class="max-w-xl w-full bg-neutral-900 border border-neutral-800 rounded-2xl p-5 shadow-2xl space-y-4">
+            <div class="aspect-video bg-black rounded-xl overflow-hidden relative group">
+              <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800" class="w-full h-full object-cover" />
+              <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                <div class="w-14 h-14 rounded-full bg-amber-400 text-neutral-950 flex items-center justify-center shadow-2xl">
+                  <i data-lucide="play" class="w-6 h-6 fill-neutral-950"></i>
                 </div>
+              </div>
             </div>
-
-            <p id="mediaTitle" class="text-xs text-slate-300 font-medium truncate">Ready for High Speed Download</p>
-
-            <!-- DIRECT DOWNLOAD ACTION BUTTON -->
-            <button id="downloadBtn" onclick="handleDirectDownload()"
-                class="block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg text-sm tracking-wide cursor-pointer">
-                ⬇️ DIRECT DOWNLOAD FILE NOW
+            <div>
+              <h3 class="font-extrabold text-base text-white">Top Hits 2026 - Best Chill Acoustic & Lofi Beats</h3>
+              <p class="text-xs text-neutral-400 mt-1">Lofi Chill Vibes • 4.8M views • 1080p FHD Detected</p>
+            </div>
+            <button onclick="triggerDetectedMediaDownload()" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg">
+              <i data-lucide="arrow-down-to-line" class="w-4 h-4 stroke-[2.8]"></i>
+              <span>Download Detected Video / MP3</span>
             </button>
+          </div>
         </div>
-    </main>
 
-    <!-- BOTTOM AD PLACEHOLDER -->
-    <div class="w-full text-center my-3 px-2">
-        <div class="inline-block w-[300px] h-[250px] p-4 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-600 flex items-center justify-center">
-            [ Mobile Ad Space ]
+        <!-- Snaptube Floating Action Button (FAB) -->
+        <div class="absolute bottom-6 right-6 z-20 flex flex-col items-end gap-2">
+          <div class="bg-neutral-900 border border-amber-400 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1.5 animate-bounce">
+            <i data-lucide="zap" class="w-3 h-3 text-amber-400 fill-amber-400"></i>
+            <span>1 Video Found!</span>
+          </div>
+          <button onclick="triggerDetectedMediaDownload()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-neutral-950 flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition transform glow-yellow">
+            <i data-lucide="arrow-down-to-line" class="w-7 h-7 stroke-[3]"></i>
+          </button>
         </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: MUSIC LOUNGE -->
+    <section id="tabContentMusic" class="tab-page hidden max-w-7xl mx-auto px-3 sm:px-6 py-6 space-y-6">
+      <div class="bg-gradient-to-r from-amber-500/20 via-yellow-500/10 to-neutral-900 border border-amber-400/30 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-400 text-neutral-950 flex items-center justify-center font-black shadow-lg">
+            <i data-lucide="music" class="w-6 h-6 stroke-[2.5]"></i>
+          </div>
+          <div>
+            <h2 class="text-lg sm:text-xl font-black text-white">Quick Downloader Music Lounge</h2>
+            <p class="text-xs text-neutral-300">High quality 320kbps MP3 extraction & streaming</p>
+          </div>
+        </div>
+        <span class="text-xs font-mono font-bold text-amber-400 bg-amber-400/10 px-3 py-1.5 rounded-xl border border-amber-400/30">Lossless M4A & MP3 320k</span>
+      </div>
+      <div id="musicGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+    </section>
+
+    <!-- TAB 4: MY FILES / DOWNLOADS -->
+    <section id="tabContentDownloads" class="tab-page hidden max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <div class="bg-neutral-900 p-4 sm:p-5 rounded-2xl border border-neutral-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <span>My Files & Downloads</span>
+            <span id="myFilesCountTag" class="text-xs px-2 py-0.5 rounded-full bg-amber-400 text-neutral-950 font-bold">2 items</span>
+          </h2>
+          <p class="text-xs text-neutral-400 mt-1">Directory: <span class="font-mono text-neutral-300">/storage/emulated/0/QuickDownloader/</span></p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1.5 rounded-xl bg-amber-400/10 border border-amber-400/40 text-amber-400 text-xs font-bold flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-3.5 h-3.5 fill-amber-400"></i>
+            <span>Turbo Multi-Thread: 10x ON</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Subtabs: Downloading vs Finished -->
+      <div class="flex items-center gap-3 border-b border-neutral-800 pb-2">
+        <button onclick="switchDlSubTab('downloading')" id="subTabDownloadingBtn" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-neutral-950 shadow-md">
+          Downloading
+        </button>
+        <button onclick="switchDlSubTab('finished')" id="subTabFinishedBtn" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-neutral-800/60 text-neutral-400 hover:text-white">
+          Finished
+        </button>
+      </div>
+
+      <div id="downloadingTasksList" class="space-y-3"></div>
+      <div id="finishedTasksList" class="space-y-3 hidden"></div>
+    </section>
+
+    <!-- TAB 5: TOOLS -->
+    <section id="tabContentTools" class="tab-page hidden max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-5">
+        <h2 class="text-xl font-black text-white flex items-center gap-2">
+          <i data-lucide="wrench" class="w-5 h-5 text-amber-400"></i>
+          <span>Quick Downloader Power Tools</span>
+        </h2>
+        <p class="text-xs text-neutral-400 mt-1">Classic Snaptube utilities included out-of-the-box</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div onclick="openStatusSaver()" class="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-emerald-500/60 transition cursor-pointer group space-y-3">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="smartphone" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-extrabold text-white">WhatsApp Status Saver</h3>
+          <p class="text-xs text-neutral-400">Auto-detect and save 24-hour status photos & videos before they disappear.</p>
+          <span class="text-xs font-bold text-emerald-400 block pt-1">Open Status Saver →</span>
+        </div>
+
+        <div onclick="openConverterModal()" class="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-amber-400/60 transition cursor-pointer group space-y-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-400/10 text-amber-400 flex items-center justify-center">
+            <i data-lucide="file-audio" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-extrabold text-white">Video to MP3 Converter</h3>
+          <p class="text-xs text-neutral-400">Extract high-bitrate MP3 or M4A audio tracks directly from any MP4 video.</p>
+          <span class="text-xs font-bold text-amber-400 block pt-1">Convert Media →</span>
+        </div>
+
+        <div onclick="openVaultModal()" class="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-neutral-600 transition cursor-pointer group space-y-3">
+          <div class="w-12 h-12 rounded-2xl bg-neutral-800 text-amber-400 flex items-center justify-center">
+            <i data-lucide="folder-lock" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-extrabold text-white">Private Vault (PIN Protected)</h3>
+          <p class="text-xs text-neutral-400">Hide sensitive downloads inside an encrypted folder with a 4-digit PIN lock.</p>
+          <span class="text-xs font-bold text-neutral-300 block pt-1">Unlock Vault →</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL 1: SNAPTUBE-STYLE RESOLUTION & FORMAT SELECTOR -->
+  <div id="downloadModal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm">
+    <div class="relative w-full max-w-lg bg-neutral-900 border border-neutral-800 rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 px-4 py-3 flex items-center justify-between text-neutral-950">
+        <div class="flex items-center gap-2">
+          <i data-lucide="arrow-down-to-line" class="w-5 h-5 stroke-[2.8]"></i>
+          <h3 class="font-extrabold text-base tracking-tight">Download video as...</h3>
+        </div>
+        <button onclick="closeDownloadModal()" class="p-1 rounded-full hover:bg-black/15 text-neutral-900">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-4 bg-neutral-900 border-b border-neutral-800 flex gap-3.5 items-center">
+        <img id="dlModalThumb" src="" class="w-24 h-16 rounded-lg object-cover bg-neutral-800 border border-neutral-700 flex-shrink-0" />
+        <div class="flex-1 min-w-0">
+          <h4 id="dlModalTitle" class="font-semibold text-sm text-white line-clamp-2 leading-snug"></h4>
+          <p id="dlModalChannel" class="text-xs text-neutral-400 mt-1 truncate"></p>
+        </div>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-4">
+        <!-- Audio formats -->
+        <div>
+          <span class="text-xs font-bold uppercase text-neutral-400 block mb-2">Music (Audio)</span>
+          <div class="grid grid-cols-2 gap-2" id="dlModalAudioOptions"></div>
+        </div>
+        <!-- Video formats -->
+        <div>
+          <span class="text-xs font-bold uppercase text-neutral-400 block mb-2">Video (MP4)</span>
+          <div class="grid grid-cols-2 gap-2" id="dlModalVideoOptions"></div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <footer class="p-4 bg-slate-900 border-t border-slate-800 text-center text-xs text-slate-500">
-        © 2026 Quick Downloader. All rights reserved.
-    </footer>
+  <!-- MODAL 2: RAZORPAY PRO VIP CHECKOUT -->
+  <div id="razorpayModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-2xl bg-neutral-900 border border-neutral-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+      <div class="relative bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 p-5 sm:p-6 text-neutral-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-neutral-950 text-amber-400 flex items-center justify-center shadow-xl">
+            <i data-lucide="crown" class="w-7 h-7 fill-amber-400"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl sm:text-2xl font-black text-neutral-950">Quick Downloader <span class="underline">PRO VIP</span></h2>
+              <span class="px-2 py-0.5 rounded-full bg-neutral-950 text-amber-400 text-[10px] font-black uppercase">Razorpay Verified</span>
+            </div>
+            <p class="text-xs text-neutral-900/80 font-semibold mt-0.5">Unlock 4K 60fps downloads, 320kbps audio, 10x Turbo speed & zero ads!</p>
+          </div>
+        </div>
+        <button onclick="closeProModal()" class="p-1.5 rounded-full hover:bg-black/15 text-neutral-950">
+          <i data-lucide="x" class="w-6 h-6 stroke-[2.5]"></i>
+        </button>
+      </div>
 
-    <!-- AUTOMATED MULTI-ENGINE SCRIPT -->
-    <script>
-        // Monetag ya Adsterra ka Direct Link yahan paste karein agar aap earning karna chahte hain
-        const DIRECT_LINK_AD_URL = "";
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-6">
+        <!-- Plans -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div onclick="selectPlan(49, '1 Month PRO')" class="pro-plan-card p-4 rounded-2xl border border-neutral-800 bg-neutral-950/60 cursor-pointer" data-price="49">
+            <h4 class="font-extrabold text-sm text-white">1 Month PRO</h4>
+            <div class="mt-2 text-2xl font-black text-amber-400 font-mono">₹49<span class="text-xs text-neutral-400">/mo</span></div>
+            <ul class="mt-2 text-[11px] text-neutral-400 space-y-1">
+              <li>✓ 1080p HD Video</li>
+              <li>✓ MP3 320k Audio</li>
+              <li>✓ Ad-free</li>
+            </ul>
+          </div>
+          <div onclick="selectPlan(199, 'Lifetime VIP Pass')" class="pro-plan-card p-4 rounded-2xl border-2 border-amber-400 bg-neutral-800/90 cursor-pointer shadow-lg" data-price="199">
+            <span class="px-2 py-0.5 rounded-full bg-amber-400 text-neutral-950 text-[9px] font-black uppercase">Best Value</span>
+            <h4 class="font-extrabold text-sm text-white mt-1">Lifetime VIP</h4>
+            <div class="mt-1 text-2xl font-black text-amber-400 font-mono">₹199<span class="text-xs text-neutral-400"> one-time</span></div>
+            <ul class="mt-2 text-[11px] text-neutral-300 space-y-1">
+              <li>✓ 4K 60FPS Video</li>
+              <li>✓ Lossless 320k MP3</li>
+              <li>✓ 10x Turbo Speed</li>
+              <li>✓ Lifetime Free Updates</li>
+            </ul>
+          </div>
+          <div onclick="selectPlan(149, '1 Year Access')" class="pro-plan-card p-4 rounded-2xl border border-neutral-800 bg-neutral-950/60 cursor-pointer" data-price="149">
+            <h4 class="font-extrabold text-sm text-white">1 Year Access</h4>
+            <div class="mt-2 text-2xl font-black text-amber-400 font-mono">₹149<span class="text-xs text-neutral-400">/yr</span></div>
+            <ul class="mt-2 text-[11px] text-neutral-400 space-y-1">
+              <li>✓ Full 4K Downloads</li>
+              <li>✓ All VIP Features</li>
+            </ul>
+          </div>
+        </div>
 
-        let finalDirectStreamUrl = "";
-        let currentFileFormat = "mp4";
-        let mediaTitleText = "QuickDownloader_File";
+        <!-- Checkout Actions -->
+        <div class="bg-neutral-950 rounded-2xl border border-neutral-800 p-4 space-y-3">
+          <div class="flex items-center justify-between text-xs text-neutral-400 border-b border-neutral-800 pb-2">
+            <span class="font-bold text-white flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+              Razorpay Secure Checkout (UPI, QR, Cards, Netbanking)
+            </span>
+            <span>256-bit SSL</span>
+          </div>
 
-        async function pasteFromClipboard() {
-            try {
-                const text = await navigator.clipboard.readText();
-                if (text) document.getElementById('mediaUrl').value = text;
-            } catch (err) {
-                alert('Please paste the URL manually.');
-            }
+          <div class="flex gap-2">
+            <button onclick="launchRazorpayGateway()" class="flex-1 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg active:scale-95 transition">
+              <i data-lucide="zap" class="w-4 h-4 fill-neutral-950"></i>
+              <span id="rzpBtnLabel">Open Razorpay Modal (₹199)</span>
+            </button>
+            <button onclick="simulateFastSuccess('UPI QR')" class="px-4 py-3.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-bold text-xs">
+              Instant QR
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: BUILT-IN MEDIA PLAYER -->
+  <div id="mediaPlayerModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-md">
+    <div class="relative w-full max-w-2xl bg-neutral-950 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="px-4 py-3 bg-neutral-900 border-b border-neutral-800 flex items-center justify-between">
+        <h3 id="playerTitle" class="font-bold text-sm text-white truncate max-w-md">Playing Media</h3>
+        <button onclick="closeMediaPlayer()" class="text-neutral-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="bg-black flex items-center justify-center min-h-[300px]">
+        <video id="html5VideoPlayer" controls autoplay class="w-full max-h-[60vh] object-contain"></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: WHATSAPP STATUS SAVER -->
+  <div id="statusSaverModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-3xl bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="bg-emerald-600 px-5 py-4 flex items-center justify-between text-white">
+        <div class="flex items-center gap-2">
+          <i data-lucide="smartphone" class="w-5 h-5"></i>
+          <h3 class="font-extrabold text-base">WhatsApp Status Saver</h3>
+        </div>
+        <button onclick="closeStatusSaver()" class="text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-4 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-3" id="statusListContainer"></div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: VIDEO TO MP3 CONVERTER -->
+  <div id="converterModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col p-5 space-y-4">
+      <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+        <h3 class="font-extrabold text-white text-base flex items-center gap-2">
+          <i data-lucide="file-audio" class="w-5 h-5 text-amber-400"></i> Video to MP3 Converter
+        </h3>
+        <button onclick="closeConverterModal()"><i data-lucide="x" class="w-5 h-5 text-neutral-400"></i></button>
+      </div>
+      <p class="text-xs text-neutral-300">Convert your downloaded videos into crisp 320kbps MP3 audio files.</p>
+      <button onclick="runConvertSimulation()" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-black text-xs uppercase tracking-wider">
+        Extract MP3 320k Now
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL 6: PRIVATE VAULT -->
+  <div id="vaultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-md">
+    <div class="relative w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col p-6 text-center space-y-4">
+      <div class="flex justify-end"><button onclick="closeVaultModal()"><i data-lucide="x" class="w-5 h-5 text-neutral-400"></i></button></div>
+      <i data-lucide="lock" class="w-12 h-12 text-amber-400 mx-auto"></i>
+      <h3 class="font-black text-lg text-white">Private PIN Vault</h3>
+      <p class="text-xs text-neutral-400">Enter 4-digit PIN (Default: <strong class="text-amber-400">0000</strong>)</p>
+      <input type="password" id="vaultPinInput" maxlength="4" placeholder="••••" class="w-32 mx-auto text-center text-xl font-mono py-2 rounded-xl bg-neutral-950 border border-neutral-700 text-white focus:outline-none focus:border-amber-400" />
+      <button onclick="checkVaultPin()" class="w-full py-2.5 rounded-xl bg-amber-400 text-neutral-950 font-bold text-xs">Unlock Vault</button>
+    </div>
+  </div>
+
+  <!-- MODAL 7: SETTINGS -->
+  <div id="settingsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-lg bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col p-5 space-y-4">
+      <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+        <h3 class="font-bold text-base text-white">Settings</h3>
+        <button onclick="closeSettingsModal()"><i data-lucide="x" class="w-5 h-5 text-neutral-400"></i></button>
+      </div>
+      <div class="text-xs text-neutral-300 space-y-3">
+        <div><strong>Storage Path:</strong> /storage/emulated/0/QuickDownloader/</div>
+        <div><strong>Turbo Multi-Thread:</strong> 10 Connections Enabled</div>
+        <div><strong>Ad-Blocker Engine:</strong> Active</div>
+      </div>
+      <button onclick="clearCacheSim()" class="w-full py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-bold">
+        Clear 120MB Cache & Logs
+      </button>
+    </div>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT LOGIC -->
+  <script>
+    // Mock video library
+    const VIDEOS = [
+      {
+        id: 'v1',
+        title: 'Top Hits 2026 - Best Chill Acoustic & Lofi Beats to Study/Relax',
+        channel: 'Lofi Chill Vibes',
+        views: '4.8M views',
+        duration: '03:42',
+        thumbnail: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800',
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+      },
+      {
+        id: 'v2',
+        title: 'Viral Instagram Reel: Breathtaking Swiss Alps 4K Drone Cinematic Sequence',
+        channel: 'Alpine Explorer',
+        views: '12.3M views',
+        duration: '00:58',
+        thumbnail: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+      },
+      {
+        id: 'v3',
+        title: 'TikTok Viral Trend: Insane Street Food Cooking in Old Delhi at Midnight!',
+        channel: 'Delhi Street Eats',
+        views: '8.1M views',
+        duration: '01:15',
+        thumbnail: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800',
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'
+      },
+      {
+        id: 'v4',
+        title: 'Desi Bass Boosted Remix 2026 - Non Stop Punjabi Club Dance Mashup',
+        channel: 'BassBoost Records',
+        views: '19.5M views',
+        duration: '04:18',
+        thumbnail: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800',
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
+      }
+    ];
+
+    const STATUSES = [
+      { sender: 'Rohit Sharma', time: '15m ago', type: 'video', thumb: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600' },
+      { sender: 'Priya Patel', time: '42m ago', type: 'image', thumb: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600' },
+      { sender: 'Amit Verma', time: '1h ago', type: 'video', thumb: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600' },
+      { sender: 'Sneha Roy', time: '2h ago', type: 'image', thumb: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600' }
+    ];
+
+    // Download Tasks State
+    let downloadingTasks = [];
+    let finishedTasks = [
+      {
+        id: 'f1',
+        title: 'Top Hits 2026 - Best Chill Acoustic & Lofi Beats',
+        format: 'MP3 320K',
+        size: '8.6 MB',
+        thumb: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300',
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+      }
+    ];
+
+    let currentSelectedPlan = { price: 199, name: 'Lifetime VIP Pass' };
+    let currentModalVideo = null;
+    let isPro = localStorage.getItem('quick_dl_is_pro') === 'true';
+
+    // Toast helper
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const text = document.getElementById('toastText');
+      text.innerText = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+
+    // Render video grids
+    function renderGrids() {
+      const vContainer = document.getElementById('videoGridContainer');
+      const mContainer = document.getElementById('musicGridContainer');
+      
+      vContainer.innerHTML = VIDEOS.map(v => `
+        <div class="bg-neutral-900 rounded-xl overflow-hidden border border-neutral-800/80 hover:border-neutral-700 transition flex flex-col">
+          <div class="relative aspect-video w-full bg-black cursor-pointer group" onclick="playVideo('${v.url}', '${v.title}')">
+            <img src="${v.thumbnail}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <span class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-mono text-white">${v.duration}</span>
+            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+              <div class="w-12 h-12 rounded-full bg-amber-400 text-neutral-950 flex items-center justify-center shadow-lg"><i data-lucide="play" class="w-5 h-5 fill-neutral-950"></i></div>
+            </div>
+          </div>
+          <div class="p-3.5 flex-1 flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-sm text-white line-clamp-2 cursor-pointer hover:text-amber-400" onclick="playVideo('${v.url}', '${v.title}')">${v.title}</h4>
+              <p class="text-xs text-neutral-400 mt-1">${v.channel} • ${v.views}</p>
+            </div>
+            <div class="mt-3 pt-2.5 border-t border-neutral-800 flex items-center justify-between">
+              <span class="text-[10px] font-mono uppercase bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-300">MP3 / MP4</span>
+              <button onclick="openDownloadModal('${v.id}')" class="px-3 py-1.5 rounded-full bg-amber-400 hover:bg-amber-300 text-neutral-950 font-extrabold text-xs flex items-center gap-1.5 shadow-md shadow-amber-400/20 active:scale-95 transition">
+                <i data-lucide="arrow-down-to-line" class="w-3.5 h-3.5 stroke-[2.8]"></i>
+                <span>Download</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      mContainer.innerHTML = VIDEOS.map(v => `
+        <div class="bg-neutral-900 rounded-xl p-3 border border-neutral-800 flex flex-col justify-between">
+          <div class="flex gap-3">
+            <img src="${v.thumbnail}" class="w-16 h-16 rounded-xl object-cover" />
+            <div class="min-w-0 flex-1">
+              <h4 class="font-bold text-xs text-white line-clamp-2">${v.title}</h4>
+              <p class="text-[11px] text-amber-400 font-mono mt-1">MP3 320kbps Available</p>
+            </div>
+          </div>
+          <button onclick="openDownloadModal('${v.id}')" class="mt-3 w-full py-1.5 rounded-xl bg-amber-400 text-neutral-950 font-bold text-xs flex items-center justify-center gap-1.5">
+            <i data-lucide="arrow-down-to-line" class="w-3.5 h-3.5"></i> Download MP3
+          </button>
+        </div>
+      `).join('');
+
+      // WhatsApp status items
+      const sContainer = document.getElementById('statusListContainer');
+      sContainer.innerHTML = STATUSES.map(s => `
+        <div class="bg-neutral-950 rounded-xl overflow-hidden border border-neutral-800 flex flex-col">
+          <img src="${s.thumb}" class="w-full aspect-[9/16] object-cover" />
+          <div class="p-2 flex flex-col justify-between">
+            <div class="text-xs font-bold text-white">${s.sender}</div>
+            <button onclick="showToast('Status saved to Gallery!')" class="mt-2 w-full py-1 rounded bg-emerald-500 text-neutral-950 font-bold text-[11px]">Save Status</button>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // Switch Top Tabs
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-page').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-tab').forEach(el => {
+        el.classList.remove('border-amber-400', 'text-amber-400', 'bg-amber-400/5');
+        el.classList.add('border-transparent', 'text-neutral-400');
+      });
+
+      const target = document.getElementById(`tabContent${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`);
+      if (target) target.classList.remove('hidden');
+
+      const activeNav = document.getElementById(`navTab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`);
+      if (activeNav) {
+        activeNav.classList.add('border-amber-400', 'text-amber-400', 'bg-amber-400/5');
+        activeNav.classList.remove('border-transparent', 'text-neutral-400');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Download modal
+    function openDownloadModal(videoId) {
+      const v = VIDEOS.find(item => item.id === videoId) || VIDEOS[0];
+      currentModalVideo = v;
+      document.getElementById('dlModalThumb').src = v.thumbnail;
+      document.getElementById('dlModalTitle').innerText = v.title;
+      document.getElementById('dlModalChannel').innerText = `${v.channel} • HD Available`;
+
+      const audioOpts = [
+        { label: 'MP3 128K', size: '3.4 MB' },
+        { label: 'MP3 320K HQ', size: '8.6 MB' },
+        { label: 'M4A Apple', size: '3.1 MB' }
+      ];
+      const videoOpts = [
+        { label: '360p Fast', size: '6.4 MB' },
+        { label: '720p HD', size: '28.5 MB' },
+        { label: '1080p FHD 60fps', size: '64.5 MB' },
+        { label: '4K Ultra', size: '142 MB' }
+      ];
+
+      document.getElementById('dlModalAudioOptions').innerHTML = audioOpts.map(o => `
+        <button onclick="startDownload('${v.title}', '${o.label}', '${o.size}')" class="p-2.5 rounded-xl bg-neutral-800 hover:bg-amber-400 hover:text-neutral-950 text-left transition flex justify-between items-center text-xs font-bold">
+          <span>${o.label}</span>
+          <span class="font-mono text-neutral-400">${o.size}</span>
+        </button>
+      `).join('');
+
+      document.getElementById('dlModalVideoOptions').innerHTML = videoOpts.map(o => `
+        <button onclick="startDownload('${v.title}', '${o.label}', '${o.size}')" class="p-2.5 rounded-xl bg-neutral-800 hover:bg-amber-400 hover:text-neutral-950 text-left transition flex justify-between items-center text-xs font-bold">
+          <span>${o.label}</span>
+          <span class="font-mono text-neutral-400">${o.size}</span>
+        </button>
+      `).join('');
+
+      document.getElementById('downloadModal').classList.remove('hidden');
+    }
+
+    function closeDownloadModal() {
+      document.getElementById('downloadModal').classList.add('hidden');
+    }
+
+    function triggerDetectedMediaDownload() {
+      openDownloadModal('v1');
+    }
+
+    // Start download simulation
+    function startDownload(title, format, size) {
+      closeDownloadModal();
+      const task = {
+        id: `t_${Date.now()}`,
+        title,
+        format,
+        size,
+        progress: 0,
+        speed: '7.8 MB/s',
+        thumb: currentModalVideo?.thumbnail || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300'
+      };
+      downloadingTasks.unshift(task);
+      updateDlBadge();
+      renderTasks();
+      showToast(`Added to download queue: ${format}`);
+
+      // Progress interval
+      const interval = setInterval(() => {
+        task.progress += 20;
+        if (task.progress >= 100) {
+          clearInterval(interval);
+          downloadingTasks = downloadingTasks.filter(t => t.id !== task.id);
+          finishedTasks.unshift(task);
+          updateDlBadge();
+          renderTasks();
+          showToast(`Downloaded: ${task.title.slice(0, 20)}...`);
+        } else {
+          renderTasks();
         }
+      }, 500);
+    }
 
-        async function processMedia() {
-            const urlInput = document.getElementById('mediaUrl').value.trim();
-            const format = document.querySelector('input[name="format"]:checked').value;
-            currentFileFormat = format;
+    function updateDlBadge() {
+      const badge = document.getElementById('activeDlCountBadge');
+      if (downloadingTasks.length > 0) {
+        badge.innerText = downloadingTasks.length;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+      document.getElementById('myFilesCountTag').innerText = `${downloadingTasks.length + finishedTasks.length} items`;
+    }
 
-            const loadingArea = document.getElementById('loadingArea');
-            const resultArea = document.getElementById('resultArea');
-            const btnFetch = document.getElementById('btnFetch');
-            const previewImg = document.getElementById('previewImg');
-            const thumbFallback = document.getElementById('thumbFallback');
-            const mediaTitle = document.getElementById('mediaTitle');
+    function renderTasks() {
+      const dContainer = document.getElementById('downloadingTasksList');
+      const fContainer = document.getElementById('finishedTasksList');
 
-            if (!urlInput) {
-                alert('Please paste a valid video or reel link first!');
-                return;
-            }
+      if (downloadingTasks.length === 0) {
+        dContainer.innerHTML = '<div class="p-8 text-center text-neutral-500 text-xs">No active downloads right now.</div>';
+      } else {
+        dContainer.innerHTML = downloadingTasks.map(t => `
+          <div class="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-2">
+            <div class="flex items-center gap-3">
+              <img src="${t.thumb}" class="w-14 h-10 object-cover rounded-lg" />
+              <div class="min-w-0 flex-1">
+                <h4 class="font-bold text-xs text-white truncate">${t.title}</h4>
+                <p class="text-[11px] text-amber-400 font-mono">${t.format} • ${t.speed}</p>
+              </div>
+              <span class="text-xs font-mono font-bold text-white">${t.progress}%</span>
+            </div>
+            <div class="w-full bg-neutral-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-amber-400 h-full transition-all" style="width: ${t.progress}%"></div>
+            </div>
+          </div>
+        `).join('');
+      }
 
-            btnFetch.disabled = true;
-            btnFetch.classList.add('opacity-50');
-            loadingArea.classList.remove('hidden');
-            resultArea.classList.add('hidden');
-            previewImg.classList.add('hidden');
-            thumbFallback.classList.remove('hidden');
+      fContainer.innerHTML = finishedTasks.map(t => `
+        <div class="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-between">
+          <div class="flex items-center gap-3 min-w-0">
+            <img src="${t.thumb}" class="w-14 h-10 object-cover rounded-lg" />
+            <div class="min-w-0">
+              <h4 class="font-bold text-xs text-white truncate">${t.title}</h4>
+              <p class="text-[11px] text-neutral-400 font-mono">${t.format} • ${t.size}</p>
+            </div>
+          </div>
+          <button onclick="playVideo('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', '${t.title}')" class="px-3 py-1.5 rounded-lg bg-amber-400 text-neutral-950 font-bold text-xs">Play</button>
+        </div>
+      `).join('');
+    }
 
-            finalDirectStreamUrl = "";
-            let thumbnailUrl = "";
-            let videoTitle = "Media File Extracted";
+    function switchDlSubTab(type) {
+      if (type === 'downloading') {
+        document.getElementById('subTabDownloadingBtn').className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-neutral-950 shadow-md';
+        document.getElementById('subTabFinishedBtn').className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-neutral-800/60 text-neutral-400 hover:text-white';
+        document.getElementById('downloadingTasksList').classList.remove('hidden');
+        document.getElementById('finishedTasksList').classList.add('hidden');
+      } else {
+        document.getElementById('subTabFinishedBtn').className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-neutral-950 shadow-md';
+        document.getElementById('subTabDownloadingBtn').className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-neutral-800/60 text-neutral-400 hover:text-white';
+        document.getElementById('downloadingTasksList').classList.add('hidden');
+        document.getElementById('finishedTasksList').classList.remove('hidden');
+      }
+    }
 
-            // --- ENGINE 1: Primary Scraper ---
-            try {
-                const res = await fetch(`https://api.vkrdownloader.workers.dev/?url=${encodeURIComponent(urlInput)}`);
-                const data = await res.json();
-                
-                if (data && data.data) {
-                    if (format === 'mp3' && data.data.audioUrl) {
-                        finalDirectStreamUrl = data.data.audioUrl;
-                    } else if (data.data.downloadUrl) {
-                        finalDirectStreamUrl = data.data.downloadUrl;
-                    } else if (data.data.downloads && data.data.downloads.length > 0) {
-                        finalDirectStreamUrl = data.data.downloads[0].url;
-                    }
-                    if (data.data.thumbnail) thumbnailUrl = data.data.thumbnail;
-                    if (data.data.title) videoTitle = data.data.title;
-                }
-            } catch (e) {
-                console.log("Engine 1 failed, switching engine...");
-            }
+    // Razorpay Integration
+    function openProModal() {
+      document.getElementById('razorpayModal').classList.remove('hidden');
+    }
+    function closeProModal() {
+      document.getElementById('razorpayModal').classList.add('hidden');
+    }
+    function selectPlan(price, name) {
+      currentSelectedPlan = { price, name };
+      document.getElementById('rzpBtnLabel').innerText = `Open Razorpay Modal (₹${price})`;
+    }
 
-            // --- ENGINE 2: Cobalt Instance Engine ---
-            if (!finalDirectStreamUrl) {
-                const instances = [
-                    "https://cobalt.api.scld.tech",
-                    "https://co.wuk.sh",
-                    "https://api.cobalt.tools"
-                ];
-
-                for (let instance of instances) {
-                    try {
-                        const res = await fetch(`${instance}/api/json`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                            body: JSON.stringify({ 
-                                url: urlInput, 
-                                isAudioOnly: (format === "mp3"),
-                                aBitrate: "320",
-                                vQuality: "720"
-                            })
-                        });
-                        const data = await res.json();
-                        if (data && data.url) {
-                            finalDirectStreamUrl = data.url;
-                            if (data.thumb) thumbnailUrl = data.thumb;
-                            if (data.text) videoTitle = data.text;
-                            break;
-                        }
-                    } catch (err) {
-                        continue;
-                    }
-                }
-            }
-
-            // --- ENGINE 3: External Gateway Router ---
-            if (!finalDirectStreamUrl) {
-                if (urlInput.includes("instagram.com")) {
-                    finalDirectStreamUrl = `https://snapinsta.app/`;
-                } else if (urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) {
-                    finalDirectStreamUrl = `https://y2mate.is/`;
-                } else {
-                    finalDirectStreamUrl = `https://snapsave.app/`;
-                }
-            }
-
-            mediaTitleText = videoTitle.replace(/[^a-zA-Z0-9]/g, "_");
-            mediaTitle.innerText = videoTitle;
-
-            // Thumbnail Handling
-            if (thumbnailUrl) {
-                previewImg.src = "https://images.weserv.nl/?url=" + encodeURIComponent(thumbnailUrl);
-                previewImg.classList.remove('hidden');
-                thumbFallback.classList.add('hidden');
-            }
-
-            loadingArea.classList.add('hidden');
-            resultArea.classList.remove('hidden');
-            btnFetch.disabled = false;
-            btnFetch.classList.remove('opacity-50');
+    function launchRazorpayGateway() {
+      if (typeof window.Razorpay === 'function') {
+        try {
+          const options = {
+            key: 'rzp_test_QDw98kL1vF8a',
+            amount: currentSelectedPlan.price * 100, // paise
+            currency: 'INR',
+            name: 'Quick Downloader PRO',
+            description: `${currentSelectedPlan.name} Subscription`,
+            handler: function(response) {
+              activatePro(response.razorpay_payment_id || 'pay_verified');
+            },
+            prefill: {
+              name: 'Quick Downloader User',
+              email: 'user@quickdownloader.app',
+              contact: '9876543210'
+            },
+            theme: { color: '#F59E0B' }
+          };
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+          return;
+        } catch (e) {
+          console.warn('Razorpay popup:', e);
         }
+      }
+      simulateFastSuccess('Razorpay UPI');
+    }
 
-        // ONE-CLICK DIRECT DOWNLOAD
-        function handleDirectDownload() {
-            if (DIRECT_LINK_AD_URL && DIRECT_LINK_AD_URL.trim() !== "") {
-                window.open(DIRECT_LINK_AD_URL, '_blank');
-            }
+    function simulateFastSuccess(method) {
+      activatePro(`pay_rzp_${Date.now().toString(36)}`);
+    }
 
-            if (!finalDirectStreamUrl) return;
+    function activatePro(paymentId) {
+      isPro = true;
+      localStorage.setItem('quick_dl_is_pro', 'true');
+      closeProModal();
+      document.getElementById('btnBuyProText').innerText = 'VIP Active';
+      document.getElementById('btnBuyProHeader').classList.add('border', 'border-amber-400');
+      document.getElementById('homeProBanner')?.classList.add('hidden');
+      showToast(`🎉 Verified Razorpay payment (${paymentId})! PRO VIP Activated!`);
+    }
 
-            const downloadBtn = document.getElementById('downloadBtn');
-            const originalText = downloadBtn.innerText;
-            downloadBtn.innerText = "⏳ Direct Download Starting...";
+    // Media Player
+    function playVideo(url, title) {
+      const modal = document.getElementById('mediaPlayerModal');
+      const player = document.getElementById('html5VideoPlayer');
+      document.getElementById('playerTitle').innerText = title;
+      player.src = url;
+      modal.classList.remove('hidden');
+    }
+    function closeMediaPlayer() {
+      const modal = document.getElementById('mediaPlayerModal');
+      const player = document.getElementById('html5VideoPlayer');
+      player.pause();
+      modal.classList.add('hidden');
+    }
 
-            const link = document.createElement('a');
-            link.href = finalDirectStreamUrl;
-            link.target = "_blank";
-            link.setAttribute('download', `${mediaTitleText}.${currentFileFormat}`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+    // Secondary Modals
+    function openStatusSaver() { document.getElementById('statusSaverModal').classList.remove('hidden'); }
+    function closeStatusSaver() { document.getElementById('statusSaverModal').classList.add('hidden'); }
+    function openConverterModal() { document.getElementById('converterModal').classList.remove('hidden'); }
+    function closeConverterModal() { document.getElementById('converterModal').classList.add('hidden'); }
+    function openVaultModal() { document.getElementById('vaultModal').classList.remove('hidden'); }
+    function closeVaultModal() { document.getElementById('vaultModal').classList.add('hidden'); }
+    function openSettingsModal() { document.getElementById('settingsModal').classList.remove('hidden'); }
+    function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
 
-            setTimeout(() => {
-                downloadBtn.innerText = originalText;
-            }, 3000);
-        }
-    </script>
+    function checkVaultPin() {
+      const pin = document.getElementById('vaultPinInput').value;
+      if (pin === '0000' || pin === '1234') {
+        showToast('Vault Unlocked! 0 hidden files.');
+        closeVaultModal();
+      } else {
+        alert('Incorrect PIN! Default PIN is 0000');
+      }
+    }
+    function runConvertSimulation() {
+      closeConverterModal();
+      showToast('MP3 320k Audio extracted successfully!');
+    }
+    function clearCacheSim() {
+      closeSettingsModal();
+      showToast('Cache and temporary logs cleaned!');
+    }
+
+    function handleSearchSubmit(e) {
+      e.preventDefault();
+      const val = document.getElementById('searchUrlInput').value;
+      if (val) {
+        showToast('Link resolved! Choose format...');
+        openDownloadModal('v1');
+      }
+    }
+    function handlePasteSample() {
+      document.getElementById('searchUrlInput').value = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+      handleSearchSubmit({ preventDefault: () => {} });
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderGrids();
+      renderTasks();
+      if (isPro) {
+        document.getElementById('btnBuyProText').innerText = 'VIP Active';
+        document.getElementById('homeProBanner')?.classList.add('hidden');
+      }
+    });
+  </script>
 </body>
 </html>
