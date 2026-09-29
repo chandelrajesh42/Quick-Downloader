@@ -33,7 +33,7 @@
     <!-- TOP AD BANNER PLACEHOLDER -->
     <div class="w-full text-center my-3 px-2">
         <div class="inline-block w-full max-w-[728px] p-3 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-600">
-            [ Top Responsive Banner Ad ]
+            [ Banner Ad Space ]
         </div>
     </div>
 
@@ -83,7 +83,7 @@
         <!-- LOADING AREA -->
         <div id="loadingArea" class="hidden mt-6 text-center">
             <div class="loader rounded-full border-4 border-slate-800 border-t-4 h-9 w-9 mx-auto mb-2"></div>
-            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Extracting video stream & thumbnail...</p>
+            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Extracting high-speed media stream...</p>
         </div>
 
         <!-- RESULT CONTAINER -->
@@ -94,11 +94,11 @@
                 <img id="previewImg" src="" alt="Media Preview" class="w-full object-cover max-h-64 hidden" onerror="this.classList.add('hidden')">
                 <div id="thumbFallback" class="p-6 text-slate-500 text-xs flex flex-col items-center gap-1">
                     <span class="text-2xl">🎬</span>
-                    <span>Media Extracted & Ready</span>
+                    <span>Media Stream Ready</span>
                 </div>
             </div>
 
-            <p id="mediaTitle" class="text-xs text-slate-300 font-medium truncate">Ready for Direct Download</p>
+            <p id="mediaTitle" class="text-xs text-slate-300 font-medium truncate">Ready for High Speed Download</p>
 
             <!-- DIRECT DOWNLOAD ACTION BUTTON -->
             <button id="downloadBtn" onclick="handleDirectDownload()"
@@ -111,7 +111,7 @@
     <!-- BOTTOM AD PLACEHOLDER -->
     <div class="w-full text-center my-3 px-2">
         <div class="inline-block w-[300px] h-[250px] p-4 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-600 flex items-center justify-center">
-            [ Mobile Banner Ad ]
+            [ Mobile Ad Space ]
         </div>
     </div>
 
@@ -119,13 +119,14 @@
         © 2026 Quick Downloader. All rights reserved.
     </footer>
 
-    <!-- UPDATED ENGINE SCRIPT -->
+    <!-- AUTOMATED MULTI-ENGINE SCRIPT -->
     <script>
-        // Monetag ya Adsterra का Direct Link Ad URL यहाँ डालें
-        const DIRECT_LINK_AD_URL = "https://your-direct-link-ad-url.com";
+        // Monetag ya Adsterra ka Direct Link yahan paste karein agar aap earning karna chahte hain
+        const DIRECT_LINK_AD_URL = "";
 
         let finalDirectStreamUrl = "";
         let currentFileFormat = "mp4";
+        let mediaTitleText = "QuickDownloader_File";
 
         async function pasteFromClipboard() {
             try {
@@ -162,9 +163,9 @@
 
             finalDirectStreamUrl = "";
             let thumbnailUrl = "";
-            let videoTitle = "Direct File Extracted";
+            let videoTitle = "Media File Extracted";
 
-            // --- API ENGINE 1: Rapid Multi-Server Direct Scraper ---
+            // --- ENGINE 1: Primary Scraper ---
             try {
                 const res = await fetch(`https://api.vkrdownloader.workers.dev/?url=${encodeURIComponent(urlInput)}`);
                 const data = await res.json();
@@ -181,15 +182,15 @@
                     if (data.data.title) videoTitle = data.data.title;
                 }
             } catch (e) {
-                console.log("Engine 1 failed, trying Engine 2...");
+                console.log("Engine 1 failed, switching engine...");
             }
 
-            // --- API ENGINE 2: Cobalt Multi-Instance Fallback ---
+            // --- ENGINE 2: Cobalt Instance Engine ---
             if (!finalDirectStreamUrl) {
                 const instances = [
                     "https://cobalt.api.scld.tech",
-                    "https://api.cobalt.tools",
-                    "https://co.wuk.sh"
+                    "https://co.wuk.sh",
+                    "https://api.cobalt.tools"
                 ];
 
                 for (let instance of instances) {
@@ -217,7 +218,7 @@
                 }
             }
 
-            // --- ENGINE 3: Smart External Gateway Fallback ---
+            // --- ENGINE 3: External Gateway Router ---
             if (!finalDirectStreamUrl) {
                 if (urlInput.includes("instagram.com")) {
                     finalDirectStreamUrl = `https://snapinsta.app/`;
@@ -228,9 +229,10 @@
                 }
             }
 
+            mediaTitleText = videoTitle.replace(/[^a-zA-Z0-9]/g, "_");
             mediaTitle.innerText = videoTitle;
 
-            // Handle Thumbnail Output
+            // Thumbnail Handling
             if (thumbnailUrl) {
                 previewImg.src = "https://images.weserv.nl/?url=" + encodeURIComponent(thumbnailUrl);
                 previewImg.classList.remove('hidden');
@@ -243,43 +245,29 @@
             btnFetch.classList.remove('opacity-50');
         }
 
-        // ONE-CLICK DIRECT DOWNLOAD AND AD TRIGGER LOGIC
-        async function handleDirectDownload() {
-            // 1. Direct Ad Link Open (If configured)
-            if (DIRECT_LINK_AD_URL && DIRECT_LINK_AD_URL !== "https://your-direct-link-ad-url.com") {
+        // ONE-CLICK DIRECT DOWNLOAD
+        function handleDirectDownload() {
+            if (DIRECT_LINK_AD_URL && DIRECT_LINK_AD_URL.trim() !== "") {
                 window.open(DIRECT_LINK_AD_URL, '_blank');
             }
 
             if (!finalDirectStreamUrl) return;
 
-            // 2. Direct File Download Handling (Blob Force Download)
-            if (finalDirectStreamUrl.startsWith('http')) {
-                const downloadBtn = document.getElementById('downloadBtn');
-                const originalText = downloadBtn.innerText;
-                downloadBtn.innerText = "⏳ Downloading file to device...";
+            const downloadBtn = document.getElementById('downloadBtn');
+            const originalText = downloadBtn.innerText;
+            downloadBtn.innerText = "⏳ Direct Download Starting...";
 
-                try {
-                    // CORS Bypassing Download Logic
-                    const response = await fetch(finalDirectStreamUrl);
-                    const blob = await response.blob();
-                    const blobUrl = window.URL.createObjectURL(blob);
-                    
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = blobUrl;
-                    a.download = `QuickDownloader_${Date.now()}.${currentFileFormat}`;
-                    document.body.appendChild(a);
-                    a.click();
-                    
-                    window.URL.revokeObjectURL(blobUrl);
-                    document.body.removeChild(a);
-                } catch (e) {
-                    // Fallback to Direct Window Location if Blob fails
-                    window.location.href = finalDirectStreamUrl;
-                } finally {
-                    downloadBtn.innerText = originalText;
-                }
-            }
+            const link = document.createElement('a');
+            link.href = finalDirectStreamUrl;
+            link.target = "_blank";
+            link.setAttribute('download', `${mediaTitleText}.${currentFileFormat}`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setTimeout(() => {
+                downloadBtn.innerText = originalText;
+            }, 3000);
         }
     </script>
 </body>
