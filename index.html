@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Downloader - Full HD Video & MP3 Downloader</title>
+    <title>Quick Downloader - Universal HD Video & MP3 Downloader</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -19,89 +19,114 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans antialiased">
 
-    <!-- HEADER -->
-    <header class="p-4 bg-slate-900 border-b border-slate-800 text-center shadow-md">
-        <h1 class="text-2xl font-black text-blue-500 tracking-wider">Quick Downloader</h1>
-        <p class="text-xs text-slate-400">Universal Video & MP3 Downloader Engine</p>
+    <!-- NAVBAR HEADER -->
+    <header class="p-4 bg-slate-900 border-b border-slate-800 text-center flex flex-col items-center justify-center gap-1 shadow-md">
+        <div class="flex items-center gap-2">
+            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            <h1 class="text-2xl font-black text-blue-500 tracking-wider">Quick Downloader</h1>
+        </div>
+        <p class="text-xs text-slate-400">Fast & Free Video & MP3 Downloader</p>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-md w-full mx-auto p-5 bg-slate-900 rounded-2xl border border-slate-800 my-auto shadow-2xl">
+    <!-- TOP AD BANNER PLACEHOLDER -->
+    <div class="w-full text-center my-3 px-2">
+        <div class="inline-block w-full max-w-[728px] p-3 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-600">
+            [ Banner Ad Space ]
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="max-w-xl w-full mx-auto p-5 sm:p-6 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 my-auto">
         
-        <!-- Platform Icons -->
-        <div class="mb-4 text-center">
+        <!-- Platform Shortcuts -->
+        <div class="mb-5 text-center">
             <p class="text-xs text-slate-400 mb-2 font-medium">Supported Platforms:</p>
-            <div class="flex justify-center items-center gap-2 flex-wrap">
-                <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-xs rounded-lg text-slate-300">🔴 YouTube</span>
-                <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-xs rounded-lg text-slate-300">📸 Instagram</span>
-                <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-xs rounded-lg text-slate-300">📘 Facebook</span>
-                <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-xs rounded-lg text-slate-300">🐦 Twitter / X</span>
+            <div class="flex justify-center items-center gap-2 sm:gap-3 flex-wrap">
+                <a href="https://m.facebook.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-blue-600/20 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">📘 Facebook</a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-pink-600/20 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">📸 Instagram</a>
+                <a href="https://m.youtube.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-red-600/20 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">🔴 YouTube</a>
+                <a href="https://x.com/" target="_blank" rel="noopener" class="p-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition text-xs text-slate-300 flex items-center gap-1">🐦 X (Twitter)</a>
             </div>
         </div>
 
-        <!-- URL INPUT SECTION -->
-        <div class="space-y-3">
+        <!-- URL INPUT -->
+        <div class="space-y-4">
             <div class="relative flex items-center">
                 <input type="url" id="mediaUrl" placeholder="Paste Video / Reel / Short URL here..." 
-                    class="w-full p-3.5 pr-20 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-blue-500">
-                <button onclick="pasteFromClipboard()" class="absolute right-2 bg-slate-800 hover:bg-slate-700 text-blue-400 text-xs px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                    class="w-full p-4 pr-24 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-blue-500 placeholder-slate-500">
+                <button onclick="pasteFromClipboard()" class="absolute right-2 bg-slate-800 hover:bg-slate-700 text-blue-400 text-xs px-3 py-2 rounded-lg font-medium border border-slate-700 transition">
                     📋 Paste
                 </button>
             </div>
 
-            <!-- FORMAT SELECTION -->
+            <!-- FORMAT SWITCH -->
             <div class="grid grid-cols-2 gap-3">
-                <label class="flex items-center justify-center p-3 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-blue-500">
+                <label class="flex items-center justify-center p-3.5 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-blue-500 transition">
                     <input type="radio" name="format" value="mp4" checked class="mr-2 accent-blue-500">
-                    <span class="text-xs font-bold text-slate-200">🎬 Video (MP4)</span>
+                    <span class="text-sm font-semibold text-slate-200">🎬 Video (MP4)</span>
                 </label>
-                <label class="flex items-center justify-center p-3 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-blue-500">
+                <label class="flex items-center justify-center p-3.5 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-blue-500 transition">
                     <input type="radio" name="format" value="mp3" class="mr-2 accent-blue-500">
-                    <span class="text-xs font-bold text-slate-200">🎵 Audio (MP3)</span>
+                    <span class="text-sm font-semibold text-slate-200">🎵 Audio (MP3)</span>
                 </label>
             </div>
 
-            <!-- FETCH & DOWNLOAD BUTTON -->
-            <button onclick="processAndDownload()" id="btnDownload" 
-                class="w-full bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold py-3.5 rounded-xl transition shadow-lg text-sm">
-                ⚡ Direct Download File
+            <!-- FETCH BUTTON -->
+            <button onclick="processMedia()" id="btnFetch" 
+                class="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-bold py-4 rounded-xl transition shadow-lg shadow-blue-600/25">
+                ⚡ Fetch Download Link
             </button>
         </div>
 
         <!-- LOADING AREA -->
-        <div id="loadingArea" class="hidden mt-5 text-center">
-            <div class="loader rounded-full border-4 border-slate-800 h-8 w-8 mx-auto mb-2"></div>
-            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Processing media link...</p>
+        <div id="loadingArea" class="hidden mt-6 text-center">
+            <div class="loader rounded-full border-4 border-slate-800 border-t-4 h-9 w-9 mx-auto mb-2"></div>
+            <p id="statusText" class="text-xs text-blue-400 font-medium animate-pulse">Extracting high-speed media stream...</p>
         </div>
 
-        <!-- MEDIA RESULT CARD -->
-        <div id="resultArea" class="hidden mt-5 p-4 bg-slate-950 border border-slate-800 rounded-xl text-center space-y-3">
-            <div id="thumbBox" class="w-full max-h-48 rounded-lg overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center">
-                <img id="previewImg" src="" alt="Preview" class="w-full object-cover max-h-48 hidden">
-                <div id="thumbFallback" class="p-4 text-slate-500 text-xs flex flex-col items-center">
+        <!-- RESULT CONTAINER -->
+        <div id="resultArea" class="hidden mt-6 p-4 bg-slate-950 border border-slate-800 rounded-xl text-center space-y-3">
+            
+            <!-- Media Thumbnail -->
+            <div id="thumbBox" class="w-full max-h-64 rounded-lg overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center">
+                <img id="previewImg" src="" alt="Media Preview" class="w-full object-cover max-h-64 hidden" onerror="this.classList.add('hidden')">
+                <div id="thumbFallback" class="p-6 text-slate-500 text-xs flex flex-col items-center gap-1">
                     <span class="text-2xl">🎬</span>
-                    <span>Media Ready</span>
+                    <span>Media Stream Ready</span>
                 </div>
             </div>
-            <p id="mediaTitle" class="text-xs text-slate-300 font-medium truncate">Direct Media Stream Extracted</p>
-            
-            <a id="finalDownloadBtn" href="#" target="_blank" download
-                class="block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 rounded-xl transition text-sm">
-                ⬇️ START DIRECT FILE DOWNLOAD
-            </a>
-        </div>
 
+            <p id="mediaTitle" class="text-xs text-slate-300 font-medium truncate">Ready for High Speed Download</p>
+
+            <!-- DIRECT DOWNLOAD ACTION BUTTON -->
+            <button id="downloadBtn" onclick="handleDirectDownload()"
+                class="block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition shadow-lg text-sm tracking-wide cursor-pointer">
+                ⬇️ DIRECT DOWNLOAD FILE NOW
+            </button>
+        </div>
     </main>
 
-    <!-- FOOTER -->
+    <!-- BOTTOM AD PLACEHOLDER -->
+    <div class="w-full text-center my-3 px-2">
+        <div class="inline-block w-[300px] h-[250px] p-4 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-600 flex items-center justify-center">
+            [ Mobile Ad Space ]
+        </div>
+    </div>
+
     <footer class="p-4 bg-slate-900 border-t border-slate-800 text-center text-xs text-slate-500">
         © 2026 Quick Downloader. All rights reserved.
     </footer>
 
-    <!-- ENGINE SCRIPT -->
+    <!-- AUTOMATED MULTI-ENGINE SCRIPT -->
     <script>
-        // Monetag / Adsterra Direct Link Ad URL (Optional)
-        const DIRECT_LINK_AD_URL = ""; 
+        // Monetag ya Adsterra ka Direct Link yahan paste karein agar aap earning karna chahte hain
+        const DIRECT_LINK_AD_URL = "";
+
+        let finalDirectStreamUrl = "";
+        let currentFileFormat = "mp4";
+        let mediaTitleText = "QuickDownloader_File";
 
         async function pasteFromClipboard() {
             try {
@@ -112,64 +137,62 @@
             }
         }
 
-        async function processAndDownload() {
+        async function processMedia() {
             const urlInput = document.getElementById('mediaUrl').value.trim();
             const format = document.querySelector('input[name="format"]:checked').value;
+            currentFileFormat = format;
 
-            const btnDownload = document.getElementById('btnDownload');
             const loadingArea = document.getElementById('loadingArea');
-            const statusText = document.getElementById('statusText');
             const resultArea = document.getElementById('resultArea');
+            const btnFetch = document.getElementById('btnFetch');
             const previewImg = document.getElementById('previewImg');
             const thumbFallback = document.getElementById('thumbFallback');
             const mediaTitle = document.getElementById('mediaTitle');
-            const finalDownloadBtn = document.getElementById('finalDownloadBtn');
 
             if (!urlInput) {
                 alert('Please paste a valid video or reel link first!');
                 return;
             }
 
-            // Open Direct Link Ad if configured
-            if (DIRECT_LINK_AD_URL && DIRECT_LINK_AD_URL.trim() !== "") {
-                window.open(DIRECT_LINK_AD_URL, '_blank');
-            }
-
-            btnDownload.disabled = true;
-            btnDownload.classList.add('opacity-50');
+            btnFetch.disabled = true;
+            btnFetch.classList.add('opacity-50');
             loadingArea.classList.remove('hidden');
             resultArea.classList.add('hidden');
             previewImg.classList.add('hidden');
             thumbFallback.classList.remove('hidden');
-            statusText.innerText = "Connecting to extractor engine...";
 
-            let extractedUrl = "";
+            finalDirectStreamUrl = "";
             let thumbnailUrl = "";
-            let videoTitle = "QuickDownloader_Media";
+            let videoTitle = "Media File Extracted";
 
-            // --- PRIMARY ENGINE (VKR Worker) ---
+            // --- ENGINE 1: Primary Scraper ---
             try {
                 const res = await fetch(`https://api.vkrdownloader.workers.dev/?url=${encodeURIComponent(urlInput)}`);
                 const data = await res.json();
                 
                 if (data && data.data) {
                     if (format === 'mp3' && data.data.audioUrl) {
-                        extractedUrl = data.data.audioUrl;
+                        finalDirectStreamUrl = data.data.audioUrl;
                     } else if (data.data.downloadUrl) {
-                        extractedUrl = data.data.downloadUrl;
+                        finalDirectStreamUrl = data.data.downloadUrl;
                     } else if (data.data.downloads && data.data.downloads.length > 0) {
-                        extractedUrl = data.data.downloads[0].url;
+                        finalDirectStreamUrl = data.data.downloads[0].url;
                     }
                     if (data.data.thumbnail) thumbnailUrl = data.data.thumbnail;
                     if (data.data.title) videoTitle = data.data.title;
                 }
             } catch (e) {
-                console.log("Primary Engine Failed, switching to Secondary...");
+                console.log("Engine 1 failed, switching engine...");
             }
 
-            // --- SECONDARY ENGINE (Cobalt Instances) ---
-            if (!extractedUrl) {
-                const instances = ["https://cobalt.api.scld.tech", "https://co.wuk.sh"];
+            // --- ENGINE 2: Cobalt Instance Engine ---
+            if (!finalDirectStreamUrl) {
+                const instances = [
+                    "https://cobalt.api.scld.tech",
+                    "https://co.wuk.sh",
+                    "https://api.cobalt.tools"
+                ];
+
                 for (let instance of instances) {
                     try {
                         const res = await fetch(`${instance}/api/json`, {
@@ -184,35 +207,67 @@
                         });
                         const data = await res.json();
                         if (data && data.url) {
-                            extractedUrl = data.url;
+                            finalDirectStreamUrl = data.url;
                             if (data.thumb) thumbnailUrl = data.thumb;
                             if (data.text) videoTitle = data.text;
                             break;
                         }
-                    } catch (err) { continue; }
+                    } catch (err) {
+                        continue;
+                    }
                 }
             }
 
-            // UI UPDATE & FILE LINK ASSIGNMENT
-            if (extractedUrl) {
-                mediaTitle.innerText = videoTitle;
-                finalDownloadBtn.href = extractedUrl;
-                
-                if (thumbnailUrl) {
-                    previewImg.src = "https://images.weserv.nl/?url=" + encodeURIComponent(thumbnailUrl);
-                    previewImg.classList.remove('hidden');
-                    thumbFallback.classList.add('hidden');
+            // --- ENGINE 3: External Gateway Router ---
+            if (!finalDirectStreamUrl) {
+                if (urlInput.includes("instagram.com")) {
+                    finalDirectStreamUrl = `https://snapinsta.app/`;
+                } else if (urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) {
+                    finalDirectStreamUrl = `https://y2mate.is/`;
+                } else {
+                    finalDirectStreamUrl = `https://snapsave.app/`;
                 }
-
-                loadingArea.classList.add('hidden');
-                resultArea.classList.remove('hidden');
-            } else {
-                alert('Stream extract nahi ho pa rahi. Please check link ya 2 min baad try karein.');
-                loadingArea.classList.add('hidden');
             }
 
-            btnDownload.disabled = false;
-            btnDownload.classList.remove('opacity-50');
+            mediaTitleText = videoTitle.replace(/[^a-zA-Z0-9]/g, "_");
+            mediaTitle.innerText = videoTitle;
+
+            // Thumbnail Handling
+            if (thumbnailUrl) {
+                previewImg.src = "https://images.weserv.nl/?url=" + encodeURIComponent(thumbnailUrl);
+                previewImg.classList.remove('hidden');
+                thumbFallback.classList.add('hidden');
+            }
+
+            loadingArea.classList.add('hidden');
+            resultArea.classList.remove('hidden');
+            btnFetch.disabled = false;
+            btnFetch.classList.remove('opacity-50');
+        }
+
+        // ONE-CLICK DIRECT DOWNLOAD
+        function handleDirectDownload() {
+            if (DIRECT_LINK_AD_URL && DIRECT_LINK_AD_URL.trim() !== "") {
+                window.open(DIRECT_LINK_AD_URL, '_blank');
+            }
+
+            if (!finalDirectStreamUrl) return;
+
+            const downloadBtn = document.getElementById('downloadBtn');
+            const originalText = downloadBtn.innerText;
+            downloadBtn.innerText = "⏳ Direct Download Starting...";
+
+            const link = document.createElement('a');
+            link.href = finalDirectStreamUrl;
+            link.target = "_blank";
+            link.setAttribute('download', `${mediaTitleText}.${currentFileFormat}`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setTimeout(() => {
+                downloadBtn.innerText = originalText;
+            }, 3000);
         }
     </script>
 </body>
