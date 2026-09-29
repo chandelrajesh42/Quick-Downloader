@@ -196,19 +196,19 @@
       <!-- Supported Platforms Shortcut Row -->
       <div class="bg-neutral-900/90 border border-neutral-800 rounded-2xl p-3.5">
         <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pb-1">
-          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+          <div onclick="openPlatformSite('https://www.youtube.com')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
             <div class="w-11 h-11 rounded-2xl bg-red-600 flex items-center justify-center text-white shadow-md font-black text-xs">YT</div>
             <span class="text-[11px] font-semibold text-neutral-300">YouTube</span>
           </div>
-          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+          <div onclick="openPlatformSite('https://www.instagram.com')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
             <div class="w-11 h-11 rounded-2xl bg-pink-600 flex items-center justify-center text-white shadow-md font-black text-xs">IG</div>
             <span class="text-[11px] font-semibold text-neutral-300">Instagram</span>
           </div>
-          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+          <div onclick="openPlatformSite('https://www.facebook.com')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
             <div class="w-11 h-11 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-md font-black text-xs">FB</div>
             <span class="text-[11px] font-semibold text-neutral-300">Facebook</span>
           </div>
-          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+          <div onclick="openPlatformSite('https://www.tiktok.com')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
             <div class="w-11 h-11 rounded-2xl bg-cyan-400 flex items-center justify-center text-neutral-950 shadow-md font-black text-xs">TT</div>
             <span class="text-[11px] font-semibold text-neutral-300">TikTok</span>
           </div>
@@ -216,11 +216,11 @@
             <div class="w-11 h-11 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-md font-black text-xs">WA</div>
             <span class="text-[11px] font-semibold text-neutral-300">WA Status</span>
           </div>
-          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+          <div onclick="openPlatformSite('https://soundcloud.com')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
             <div class="w-11 h-11 rounded-2xl bg-orange-600 flex items-center justify-center text-white shadow-md font-black text-xs">SC</div>
             <span class="text-[11px] font-semibold text-neutral-300">SoundCloud</span>
           </div>
-          <div onclick="switchTab('sites')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
+          <div onclick="openPlatformSite('https://x.com')" class="flex flex-col items-center gap-1.5 flex-shrink-0 px-2 py-1 cursor-pointer hover:scale-105 transition-transform">
             <div class="w-11 h-11 rounded-2xl bg-black border border-neutral-700 flex items-center justify-center text-white shadow-md font-black text-xs">X</div>
             <span class="text-[11px] font-semibold text-neutral-300">Twitter</span>
           </div>
@@ -270,22 +270,22 @@
       <div class="bg-neutral-900 rounded-2xl border border-neutral-800 shadow-xl overflow-hidden flex flex-col relative min-h-[550px]">
         <div class="p-3 bg-neutral-950 border-b border-neutral-800 flex items-center gap-2">
           <i data-lucide="lock" class="w-4 h-4 text-emerald-400 ml-2"></i>
-          <input type="text" id="browserAddressInput" value="https://www.youtube.com/watch?v=trending" class="flex-1 px-3 py-1.5 rounded-xl bg-neutral-900 border border-neutral-700/80 text-xs text-neutral-200 font-mono focus:outline-none focus:border-amber-400" />
-          <button onclick="triggerDetectedMediaDownload()" class="px-3 py-1.5 rounded-lg bg-neutral-800 text-xs font-bold hover:text-white">Go</button>
+          <input type="text" id="browserAddressInput" value="https://www.youtube.com" class="flex-1 px-3 py-1.5 rounded-xl bg-neutral-900 border border-neutral-700/80 text-xs text-neutral-200 font-mono focus:outline-none focus:border-amber-400" />
+          <button onclick="navigateBrowser()" class="px-3 py-1.5 rounded-lg bg-amber-400 text-neutral-950 text-xs font-bold hover:bg-amber-300 transition">Go</button>
         </div>
         <div class="p-6 bg-neutral-950/70 flex-1 flex flex-col items-center justify-center space-y-4 text-center">
           <div class="max-w-xl w-full bg-neutral-900 border border-neutral-800 rounded-2xl p-5 shadow-2xl space-y-4">
             <div class="aspect-video bg-black rounded-xl overflow-hidden relative group">
-              <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800" class="w-full h-full object-cover" />
+              <img id="browserPreviewThumb" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800" class="w-full h-full object-cover" />
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <div class="w-14 h-14 rounded-full bg-amber-400 text-neutral-950 flex items-center justify-center shadow-2xl">
+                <div class="w-14 h-14 rounded-full bg-amber-400 text-neutral-950 flex items-center justify-center shadow-2xl cursor-pointer" onclick="playVideo('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', 'Top Hits 2026')">
                   <i data-lucide="play" class="w-6 h-6 fill-neutral-950"></i>
                 </div>
               </div>
             </div>
             <div>
-              <h3 class="font-extrabold text-base text-white">Top Hits 2026 - Best Chill Acoustic & Lofi Beats</h3>
-              <p class="text-xs text-neutral-400 mt-1">Lofi Chill Vibes • 4.8M views • 1080p FHD Detected</p>
+              <h3 id="browserPreviewTitle" class="font-extrabold text-base text-white">Top Hits 2026 - Best Chill Acoustic & Lofi Beats</h3>
+              <p id="browserPreviewSub" class="text-xs text-neutral-400 mt-1">Lofi Chill Vibes • 4.8M views • 1080p FHD Detected</p>
             </div>
             <button onclick="triggerDetectedMediaDownload()" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg">
               <i data-lucide="arrow-down-to-line" class="w-4 h-4 stroke-[2.8]"></i>
@@ -330,7 +330,7 @@
         <div>
           <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
             <span>My Files & Downloads</span>
-            <span id="myFilesCountTag" class="text-xs px-2 py-0.5 rounded-full bg-amber-400 text-neutral-950 font-bold">2 items</span>
+            <span id="myFilesCountTag" class="text-xs px-2 py-0.5 rounded-full bg-amber-400 text-neutral-950 font-bold">1 items</span>
           </h2>
           <p class="text-xs text-neutral-400 mt-1">Directory: <span class="font-mono text-neutral-300">/storage/emulated/0/QuickDownloader/</span></p>
         </div>
@@ -659,6 +659,18 @@
       setTimeout(() => toast.classList.add('hidden'), 3500);
     }
 
+    // Platform Shortcuts Opener
+    function openPlatformSite(url) {
+      document.getElementById('browserAddressInput').value = url;
+      switchTab('sites');
+      showToast(`Opening ${url}...`);
+    }
+
+    function navigateBrowser() {
+      const url = document.getElementById('browserAddressInput').value;
+      showToast(`Loading ${url}...`);
+    }
+
     // Render video grids
     function renderGrids() {
       const vContainer = document.getElementById('videoGridContainer');
@@ -711,7 +723,7 @@
           <img src="${s.thumb}" class="w-full aspect-[9/16] object-cover" />
           <div class="p-2 flex flex-col justify-between">
             <div class="text-xs font-bold text-white">${s.sender}</div>
-            <button onclick="triggerDeviceDownload('Status_${s.sender}', s.type === 'video' ? 'mp4' : 'jpg'); showToast('Status saved to Gallery!');" class="mt-2 w-full py-1 rounded bg-emerald-500 text-neutral-950 font-bold text-[11px]">Save Status</button>
+            <button onclick="triggerDeviceDownload('Status_${s.sender}', '${s.type === 'video' ? 'mp4' : 'jpg'}'); showToast('Status saved to Gallery!');" class="mt-2 w-full py-1 rounded bg-emerald-500 text-neutral-950 font-bold text-[11px]">Save Status</button>
           </div>
         </div>
       `).join('');
@@ -719,12 +731,20 @@
       lucide.createIcons();
     }
 
-    // Switch Top Tabs
+    // Switch Top / Bottom Tabs
     function switchTab(tabId) {
       document.querySelectorAll('.tab-page').forEach(el => el.classList.add('hidden'));
+      
+      // Desktop Nav Styling Reset
       document.querySelectorAll('.nav-tab').forEach(el => {
         el.classList.remove('border-amber-400', 'text-amber-400', 'bg-amber-400/5');
         el.classList.add('border-transparent', 'text-neutral-400');
+      });
+
+      // Mobile Nav Styling Reset
+      document.querySelectorAll('.m-nav-tab').forEach(el => {
+        el.classList.remove('text-amber-400', 'font-bold');
+        el.classList.add('text-neutral-400', 'font-medium');
       });
 
       const target = document.getElementById(`tabContent${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`);
@@ -734,6 +754,12 @@
       if (activeNav) {
         activeNav.classList.add('border-amber-400', 'text-amber-400', 'bg-amber-400/5');
         activeNav.classList.remove('border-transparent', 'text-neutral-400');
+      }
+
+      const activeMobileNav = document.querySelector(`.m-nav-tab[data-target="${tabId}"]`);
+      if (activeMobileNav) {
+        activeMobileNav.classList.add('text-amber-400', 'font-bold');
+        activeMobileNav.classList.remove('text-neutral-400', 'font-medium');
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1034,7 +1060,7 @@
     }
 
     function handleSearchSubmit(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       const val = document.getElementById('searchUrlInput').value.trim();
       if (val) {
         const isUrl = /^https?:\/\//i.test(val) || val.includes('.com') || val.includes('.be');
@@ -1063,7 +1089,7 @@
     }
     function handlePasteSample() {
       document.getElementById('searchUrlInput').value = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-      handleSearchSubmit({ preventDefault: () => {} });
+      handleSearchSubmit();
     }
 
     // Initialize on load
